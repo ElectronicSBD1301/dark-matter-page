@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
+  final VoidCallback onTaphome;
   final VoidCallback onTapAbout;
   final VoidCallback onTapServices;
   final VoidCallback onTapProjects;
@@ -8,6 +9,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   const CustomAppBar({
     Key? key,
+    required this.onTaphome,
     required this.onTapAbout,
     required this.onTapServices,
     required this.onTapProjects,
@@ -35,16 +37,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       actions: [
         TextButton(
-          onPressed: onTapAbout,
+          onPressed: onTaphome,
           child: const Text('Home', style: TextStyle(color: Colors.white)),
         ),
         TextButton(
           onPressed: onTapAbout,
           child: const Text('Nosotros', style: TextStyle(color: Colors.white)),
-        ),
-        TextButton(
-          onPressed: onTapContact,
-          child: const Text('Contactos', style: TextStyle(color: Colors.white)),
         ),
         TextButton(
           onPressed: onTapServices,
@@ -53,6 +51,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         TextButton(
           onPressed: onTapProjects,
           child: const Text('Proyectos', style: TextStyle(color: Colors.white)),
+        ),
+        TextButton(
+          onPressed: onTapContact,
+          child: const Text('Contactos', style: TextStyle(color: Colors.white)),
         ),
       ],
     );

@@ -14,7 +14,8 @@ class AboutPage extends StatelessWidget {
             () {}, // Podrías navegar o scrollear a secciones internas, etc.
         onTapServices: () => Navigator.pushNamed(context, '/services'),
         onTapProjects: () => Navigator.pushNamed(context, '/projects'),
-        onTapContact: () {}, // O navega/scroll a un formulario de contacto
+        onTapContact: () {},
+        onTaphome: () {}, // O navega/scroll a un formulario de contacto
       ),
       body: Stack(
         children: [

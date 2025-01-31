@@ -8,6 +8,7 @@ import '../widgets/custom_footer.dart';
 
 // Claves GlobalKey para hacer scroll a secciones específicas
 final aboutKey = GlobalKey();
+final homekey = GlobalKey();
 final servicesKey = GlobalKey();
 final projectsKey = GlobalKey();
 final contactKey = GlobalKey();
@@ -82,6 +83,7 @@ class _HomePageState extends State<HomePage> {
         onTapServices: () => _scrollToSection(servicesKey),
         onTapProjects: () => _scrollToSection(projectsKey),
         onTapContact: () => _scrollToSection(contactKey),
+        onTaphome: () => _scrollToSection(homekey),
       ),
       body: SingleChildScrollView(
         controller: _scrollController,
@@ -89,6 +91,7 @@ class _HomePageState extends State<HomePage> {
           children: [
             /// 1) SECCIÓN de background con CustomPainter
             SizedBox(
+              key: homekey,
               height: MediaQuery.of(context).size.height - 70,
               width: double.infinity,
               child: CustomPaint(
@@ -199,18 +202,17 @@ class _HomePageState extends State<HomePage> {
 
             /// 2) Sección con Slider (Texto + Video en un Slide)
             Container(
-              key: servicesKey,
+              key: aboutKey,
               color: Colors.transparent,
               padding: const EdgeInsets.symmetric(vertical: 40),
               child: SliderSection(), // Implementación más abajo
             ),
 
             /// 3) Sección “Construye para el futuro”
-            _buildFutureSection(),
+            SizedBox(key: servicesKey, child: _buildFutureSection()),
 
-            /// 6) Sección “Proyectos” con auto-scroll
-            _buildProjectsSection(),
-            ProjectsSection(),
+            /// 4) Sección “Proyectos” con auto-scroll
+            SizedBox(key: projectsKey, child: ProjectsSection()),
 
             /// 7) Footer (Contacto, etc.)
             Container(

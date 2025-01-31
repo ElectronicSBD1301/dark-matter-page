@@ -14,6 +14,7 @@ class ProjectsPage extends StatelessWidget {
         onTapServices: () => Navigator.pushNamed(context, '/services'),
         onTapProjects: () {},
         onTapContact: () {},
+        onTaphome: () {},
       ),
       body: Stack(
         children: [

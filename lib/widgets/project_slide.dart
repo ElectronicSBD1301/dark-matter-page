@@ -1,8 +1,9 @@
 import 'dart:async';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'dart:math' as math; // <-- Importar 'dart:math' con alias 'math'
 
-/// Soporte de drag con mouse en Desktop/Web:
+/// Soporte de drag con mouse en Desktop/Web (para arrastrar con el mouse):
 class CustomScrollBehavior extends MaterialScrollBehavior {
   @override
   Set<PointerDeviceKind> get dragDevices => {
@@ -14,9 +15,9 @@ class CustomScrollBehavior extends MaterialScrollBehavior {
       };
 }
 
-/// Representa cada "slide" en el carrusel:
+/// Modelo de datos para cada slide
 class SlideData {
-  final double slideWidth;
+  final double slideWidth; // Ancho de este slide en píxeles
   final String type; // "sub" o "normal"
   final String image;
   final String title;
@@ -39,15 +40,14 @@ class ProjectsSection extends StatefulWidget {
 }
 
 class _ProjectsSectionState extends State<ProjectsSection> {
-  /// Lista base (sub-slides + normales con anchos distintos).
+  // Lista base con sub-slides y slides normales
   final List<SlideData> baseSlides = [
     SlideData(
-      slideWidth: 280,
-      type: 'sub',
-      image: 'assets/images/project1.png',
-      title: 'Sub #1',
-      subtitle: 'Soluciones',
-    ),
+        slideWidth: 280,
+        type: 'sub',
+        image: 'assets/images/project1.png',
+        title: 'DARK',
+        subtitle: 'Soluciones para todas las plataformas'),
     SlideData(
       slideWidth: 350,
       type: 'normal',
@@ -57,8 +57,8 @@ class _ProjectsSectionState extends State<ProjectsSection> {
       slideWidth: 320,
       type: 'sub',
       image: 'assets/images/project2.png',
-      title: 'Sub #2',
-      subtitle: 'Innovación',
+      title: 'MATTER',
+      subtitle: 'Rendimiento Optimo',
     ),
     SlideData(
       slideWidth: 200,
@@ -69,8 +69,8 @@ class _ProjectsSectionState extends State<ProjectsSection> {
       slideWidth: 300,
       type: 'sub',
       image: 'assets/images/project3.png',
-      title: 'Sub #3',
-      subtitle: 'Eficiencia',
+      title: 'Code',
+      subtitle: 'Eficiencia y Innovación',
     ),
     SlideData(
       slideWidth: 280,
@@ -81,25 +81,32 @@ class _ProjectsSectionState extends State<ProjectsSection> {
 
   // Ajustes del carrusel
   static const double carouselHeight = 400;
-  static const double minSeparation = 10; // MÁS separación entre slides
-  // Aumentamos loopCount para que el salto final ocurra menos frecuentemente
-  static const int loopCount = 5;
-  final Duration autoPlayInterval = const Duration(seconds: 5);
+  static const double separation = 10; // Mayor separación horizontal
+  static const int loopCount = 5; // Replicamos 5 veces => falso infinito
+  static const double scrollSpeed = 1; // Velocidad del desplazamiento continuo
 
   final ScrollController _scrollController = ScrollController();
-  Timer? _autoPlayTimer;
+  Timer? _continuousTimer;
 
   late List<SlideData> _infiniteSlides;
-  int _currentIndex = 0;
+  bool _userIsDragging =
+      false; // Para pausar el auto-scroll mientras se arrastra
 
   @override
   void initState() {
     super.initState();
     _buildInfiniteSlides();
-    _startAutoPlay();
+    _startContinuousScroll();
   }
 
-  /// Replicamos la lista base 'loopCount' veces => "falso infinito"
+  @override
+  void dispose() {
+    _continuousTimer?.cancel();
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  /// Replicamos la lista base loopCount veces => “falso infinito”
   void _buildInfiniteSlides() {
     _infiniteSlides = [];
     for (int i = 0; i < loopCount; i++) {
@@ -107,93 +114,94 @@ class _ProjectsSectionState extends State<ProjectsSection> {
     }
   }
 
-  /// Arranque de auto-play cada 5s
-  void _startAutoPlay() {
-    _autoPlayTimer?.cancel();
-    _autoPlayTimer = Timer.periodic(autoPlayInterval, (_) {
-      _goToNext();
+  /// Scroll continuo y sutil: avanza un poco el offset cada ~16ms (60fps)
+  void _startContinuousScroll() {
+    _continuousTimer?.cancel();
+    _continuousTimer = Timer.periodic(const Duration(milliseconds: 16), (_) {
+      if (!_userIsDragging) {
+        final newOffset = _scrollController.offset + scrollSpeed;
+        _scrollController.jumpTo(newOffset);
+        _maybeLoopResetByOffset(newOffset);
+      }
     });
   }
 
-  @override
-  void dispose() {
-    _autoPlayTimer?.cancel();
-    _scrollController.dispose();
-    super.dispose();
-  }
-
-  /// Avanza al siguiente índice virtual
-  void _goToNext() {
-    setState(() => _currentIndex++);
-    _snapToIndex(_currentIndex);
-  }
-
-  /// Anima el scroll al offset del slide [index]
-  Future<void> _snapToIndex(int index) async {
-    final targetOffset = _calculateItemOffset(index);
-    await _scrollController.animateTo(
-      targetOffset,
-      duration: const Duration(milliseconds: 500),
-      curve: Curves.easeInOut,
-    );
-    _maybeLoopReset(index);
-  }
-
-  /// Si estamos cerca del final => saltamos al medio
-  void _maybeLoopReset(int index) {
-    final total = _infiniteSlides.length;
-    final baseLen = baseSlides.length;
-    if (index > total - baseLen) {
-      final midStart = baseLen * (loopCount ~/ 2);
-      final newIndex = midStart + (index % baseLen);
-      _currentIndex = newIndex;
-      final newOffset = _calculateItemOffset(newIndex);
-      _scrollController.jumpTo(newOffset);
+  /// Si superamos el final => saltamos al medio
+  void _maybeLoopResetByOffset(double offset) {
+    final totalWidth = _calculateTotalWidthOf(_infiniteSlides);
+    // Un “margen de seguridad” para reiniciar
+    if (offset > totalWidth * 0.8) {
+      // saltamos al medio
+      final halfOffset = totalWidth * 0.4;
+      _scrollController.jumpTo(halfOffset);
     }
   }
 
-  /// Calcula offset sumando (slideWidth + minSeparation) para cada item previo
-  double _calculateItemOffset(int index) {
-    double offset = 0;
-    for (int i = 0; i < index; i++) {
-      offset += _infiniteSlides[i].slideWidth + minSeparation;
+  /// Calcula el ancho total de todos los slides + separaciones
+  /// (menos la última separación para no pasarnos).
+  double _calculateTotalWidthOf(List<SlideData> slides) {
+    double total = 0;
+    for (int i = 0; i < slides.length; i++) {
+      total += slides[i].slideWidth;
+      if (i < slides.length - 1) {
+        total += separation;
+      }
     }
-    return offset;
+    return total;
   }
 
-  /// Cuando se suelta el drag => calculamos el item más cercano
-  void _onPanEnd() {
+  /// Detectamos cuando el usuario empieza a arrastrar => pausar auto‐scroll
+  /// y cuando suelta => retomar auto‐scroll + snap
+  void _onPointerDown() {
+    _userIsDragging = true;
+  }
+
+  void _onPointerUp() {
+    _userIsDragging = false;
+    _snapToClosestSlide();
+  }
+
+  /// Al soltar => snapping
+  void _snapToClosestSlide() {
     final pos = _scrollController.offset;
     double bestDist = double.infinity;
-    int bestIndex = 0;
+    double bestCenter = 0;
+
+    // Recorremos cada slide para encontrar el “centro” más cercano
+    double offset = 0;
     for (int i = 0; i < _infiniteSlides.length; i++) {
-      final center =
-          _calculateItemOffset(i) + (_infiniteSlides[i].slideWidth / 2);
+      final slideWidth = _infiniteSlides[i].slideWidth;
+      final center = offset + (slideWidth / 2);
       final dist = (center - pos).abs();
       if (dist < bestDist) {
         bestDist = dist;
-        bestIndex = i;
+        bestCenter = center;
       }
+      offset += slideWidth + separation;
     }
-    _currentIndex = bestIndex;
-    _snapToIndex(bestIndex);
+    final targetOffset = math.max(
+      0.0, // <-- usa 0.0 en vez de 0
+      bestCenter - (carouselHeight / 2),
+    );
+    _scrollController.animateTo(
+      targetOffset,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
   }
 
-  // =========================
-  // Construcción principal
-  // =========================
+  bool toggle = false; // Alternador local
   @override
   Widget build(BuildContext context) {
     return ScrollConfiguration(
-      // 1) Habilitamos drag con mouse en Desktop/Web
+      // Soporte de arrastre con mouse en Desktop/Web
       behavior: CustomScrollBehavior(),
       child: Container(
         color: Colors.transparent,
-        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // Título
             const Text(
               'Nuestros proyectos',
               style: TextStyle(
@@ -204,25 +212,26 @@ class _ProjectsSectionState extends State<ProjectsSection> {
             ),
             const SizedBox(height: 20),
 
-            // Carrusel (SingleChildScrollView + Row)
             SizedBox(
               height: carouselHeight,
               child: Listener(
-                onPointerUp: (_) => _onPanEnd(),
+                // Detectamos cuando inicia y termina el arrastre
+                onPointerDown: (_) => _onPointerDown(),
+                onPointerUp: (_) => _onPointerUp(),
                 child: SingleChildScrollView(
                   controller: _scrollController,
                   scrollDirection: Axis.horizontal,
                   child: Row(
                     children: List.generate(_infiniteSlides.length, (index) {
                       final slide = _infiniteSlides[index];
+
                       return Container(
                         width: slide.slideWidth,
                         height: carouselHeight,
-                        // mayor separación horizontal
-                        margin: EdgeInsets.only(right: minSeparation),
+                        margin: EdgeInsets.only(right: separation),
                         color: Colors.transparent,
                         child: (slide.type == 'sub')
-                            ? _buildSubSlide(slide)
+                            ? _buildSubSlide(slide, carouselHeight, toggle)
                             : _buildNormalSlide(slide),
                       );
                     }),
@@ -273,78 +282,87 @@ class _ProjectsSectionState extends State<ProjectsSection> {
     );
   }
 
-  /// Sub-slide: texto + imagen con el mismo ancho
-  Widget _buildSubSlide(SlideData slide) {
-    // Para que la caja de texto y la imagen tengan el mismo ancho,
-    // definimos Column con "width: double.infinity" => heredado del parent.
+  /// Sub-slide con borde menor (5) y sin margenes verticales extra
+  Widget _buildSubSlide(
+      SlideData slide, double carouselHeight, bool isReversed) {
+    List<Widget> columnChildren = [
+      // Caja de texto
+      Padding(
+        padding: EdgeInsets.only(
+            bottom: isReversed ? 0 : carouselHeight * 0.02,
+            top: !isReversed ? 0 : carouselHeight * 0.02),
+        child: Container(
+          height: carouselHeight * 0.33,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: Colors.black54,
+            borderRadius: BorderRadius.circular(5), // borde menor
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                slide.title,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  color: Colors.pinkAccent,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                slide.subtitle,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  color: Colors.white70,
+                  fontSize: 14,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+
+      // Imagen, ocupa el resto
+      if (slide.image.isNotEmpty)
+        Expanded(
+          child: Container(
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: Colors.transparent,
+              borderRadius: BorderRadius.circular(5),
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(5),
+              child: Image.asset(slide.image, fit: BoxFit.cover),
+            ),
+          ),
+        )
+      else
+        Expanded(
+          child: Center(
+            child: Text(
+              'No Image',
+              style: const TextStyle(color: Colors.white),
+            ),
+          ),
+        ),
+    ];
+    toggle = !toggle;
     return Container(
       color: Colors.transparent,
       child: Column(
-        children: [
-          // Caja con título/subtítulo
-          Container(
-            width: double.infinity, // Mismo ancho que el "slideWidth"
-            padding: const EdgeInsets.all(16),
-            margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
-            decoration: BoxDecoration(
-              color: Colors.black54,
-              borderRadius: BorderRadius.circular(15),
-            ),
-            child: Column(
-              children: [
-                Text(
-                  slide.title,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: Colors.pinkAccent,
-                    fontSize: 22, // un poco más grande
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  slide.subtitle,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: Colors.white70,
-                    fontSize: 16, // un poco más grande
-                  ),
-                ),
-              ],
-            ),
-          ),
-
-          // Imagen a full ancho
-          if (slide.image.isNotEmpty)
-            Expanded(
-              child: Container(
-                width: double.infinity,
-                margin: const EdgeInsets.only(bottom: 8),
-                decoration: BoxDecoration(
-                  color: Colors.transparent,
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(15),
-                  child: Image.asset(slide.image, fit: BoxFit.cover),
-                ),
-              ),
-            )
-          else
-            const Expanded(
-              child: Center(
-                child: Text('No Image', style: TextStyle(color: Colors.white)),
-              ),
-            ),
-        ],
+        children:
+            isReversed ? columnChildren.reversed.toList() : columnChildren,
       ),
     );
   }
 
-  /// Slide normal, ocupa todo el ancho y alto
+  /// Slide normal, sin margenes verticales y menor borde
   Widget _buildNormalSlide(SlideData slide) {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(20),
+      borderRadius: BorderRadius.circular(5), // borde menor
       child: (slide.image.isNotEmpty)
           ? Image.asset(slide.image, fit: BoxFit.cover)
           : const Center(
@@ -352,17 +370,23 @@ class _ProjectsSectionState extends State<ProjectsSection> {
     );
   }
 
-  // Métodos de flechas (opcionales) si quieres
+  // (Opcional) Flechas => No se detiene, así que no es muy útil
   void _goToPreviousPage() {
-    setState(() {
-      _currentIndex--;
-      if (_currentIndex < 0) _currentIndex = 0;
-    });
-    _snapToIndex(_currentIndex);
+    final newOffset = _scrollController.offset - 100; // retrocede 100 px
+    if (newOffset < 0) return;
+    _scrollController.animateTo(
+      newOffset,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
   }
 
   void _goToNextPage() {
-    setState(() => _currentIndex++);
-    _snapToIndex(_currentIndex);
+    final newOffset = _scrollController.offset + 100;
+    _scrollController.animateTo(
+      newOffset,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
   }
 }
