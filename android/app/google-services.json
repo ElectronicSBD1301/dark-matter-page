@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "372705593198",
+    "project_id": "dark-60a60",
+    "storage_bucket": "dark-60a60.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:372705593198:android:bedcf5850ce5817018e37f",
+        "android_client_info": {
+          "package_name": "com.example.dark_matter_page"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAcUu2iwpMVYGAINBHkU5O6orey0XRN7XE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

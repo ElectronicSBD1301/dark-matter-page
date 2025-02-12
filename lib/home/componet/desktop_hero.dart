@@ -1,0 +1,179 @@
+import 'package:dark_matter_page/home/componet/hero_text.dart';
+import 'package:flutter/material.dart';
+import 'package:video_player/video_player.dart';
+
+class DesktopHero extends StatefulWidget {
+  const DesktopHero({Key? key}) : super(key: key);
+
+  @override
+  _DesktopHeroState createState() => _DesktopHeroState();
+}
+
+class _DesktopHeroState extends State<DesktopHero> {
+  late VideoPlayerController _backgroundController;
+  bool _isBackgroundInitialized = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeVideo();
+  }
+
+  Future<void> _initializeVideo() async {
+    try {
+      // URL directa del video en Firebase Storage
+      final videoUrl =
+          'https://firebasestorage.googleapis.com/v0/b/dark-60a60.firebasestorage.app/o/fondo.mp4?alt=media&token=23f802af-0059-4668-aa9e-8169a511da50';
+
+      _backgroundController = VideoPlayerController.network(videoUrl)
+        ..initialize().then((_) {
+          setState(() {
+            _isBackgroundInitialized = true;
+          });
+          _backgroundController.setLooping(true);
+          _backgroundController.setVolume(0);
+          _backgroundController.play();
+        });
+    } catch (e) {
+      print('Error al cargar el video: $e');
+    }
+  }
+
+  @override
+  void dispose() {
+    _backgroundController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final mediaQuery = MediaQuery.of(context).size;
+    return Stack(
+      children: [
+        // Video de fondo
+        if (_isBackgroundInitialized)
+          SizedBox(
+            width: mediaQuery.width,
+            height: mediaQuery.height,
+            child: FittedBox(
+              fit: BoxFit.cover,
+              child: SizedBox(
+                width: _backgroundController.value.size.width,
+                height: _backgroundController.value.size.height,
+                child: VideoPlayer(_backgroundController),
+              ),
+            ),
+          )
+        else
+          Container(
+            width: mediaQuery.width,
+            height: mediaQuery.height,
+            color: Colors.black,
+            child: const Center(
+              child: CircularProgressIndicator(color: Colors.white),
+            ),
+          ),
+        // Contenido principal
+        SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+                vertical: 20.0, horizontal: mediaQuery.width * 0.07),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const SizedBox(height: 75.0),
+                Center(
+                  child: HeroText(mediaQuery: mediaQuery),
+                ),
+                // Sección "tecno()" bien posicionada
+                Padding(
+                  padding: const EdgeInsets.only(top: 40),
+                  child: tecno(),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+Widget tecno() {
+  return LayoutBuilder(
+    builder: (context, constraints) {
+      final double width = constraints.maxWidth;
+
+      double fontSize = 16;
+      double imageSize = 123;
+      double spacing = 123;
+
+      if (width >= 1800) {
+        fontSize = 24;
+        imageSize = 153.8;
+        spacing = 123;
+      } else if (width >= 1500) {
+        fontSize = 18;
+        imageSize = 138.4;
+        spacing = 107.7;
+      } else if (width >= 1000 && width < 1500) {
+        fontSize = 17;
+        imageSize = 107.7;
+        spacing = 76.9;
+      } else if (width >= 600 && width < 1000) {
+        fontSize = 16;
+        imageSize = 92.3;
+        spacing = 61.5;
+      } else if (width >= 350 && width < 600) {
+        fontSize = 14;
+        imageSize = 76.9;
+        spacing = 46.2;
+      } else {
+        fontSize = 12;
+        imageSize = 61.5;
+        spacing = 30.8;
+      }
+
+      return Container(
+        color: Colors.transparent,
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+        child: Column(
+          children: [
+            Container(
+              color: Color.fromARGB(83, 0, 0, 0),
+              child: Text(
+                'Conectamos empresas con soluciones tecnológicas innovadoras '
+                'para impulsar su éxito global.',
+                style: TextStyle(
+                  color: Colors.blue,
+                  fontSize: fontSize,
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+            const SizedBox(height: 20),
+            Wrap(
+              spacing: spacing,
+              runSpacing: 20,
+              alignment: WrapAlignment.center,
+              children: [
+                Image.asset('assets/images/flutter.png',
+                    width: imageSize, height: imageSize),
+                Image.asset('assets/images/dart.png',
+                    width: imageSize, height: imageSize),
+                Image.asset('assets/images/nodejs.png',
+                    width: imageSize, height: imageSize),
+                Image.asset('assets/images/python.png',
+                    width: imageSize, height: imageSize),
+                Image.asset('assets/images/github.png',
+                    width: imageSize, height: imageSize),
+              ],
+            ),
+          ],
+        ),
+      );
+    },
+  );
+}

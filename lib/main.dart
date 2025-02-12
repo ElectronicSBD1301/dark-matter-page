@@ -1,7 +1,14 @@
+import 'package:dark_matter_page/firebase_options.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'routes.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  ); // 🔥 Inicializa Firebase
+
   runApp(const DarkMatterApp());
 }
 
@@ -11,6 +18,7 @@ class DarkMatterApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      color: Colors.black,
       title: 'Dark Matter',
       debugShowCheckedModeBanner: false,
       theme: ThemeData.dark().copyWith(

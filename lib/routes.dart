@@ -1,6 +1,6 @@
 import 'package:dark_matter_page/pages/services_pages.dart';
 import 'package:flutter/material.dart';
-import 'pages/home_page.dart';
+import 'home/home_page.dart';
 import 'pages/about_page.dart';
 import 'pages/projects_page.dart';
 

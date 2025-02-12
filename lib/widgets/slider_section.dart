@@ -104,7 +104,7 @@ class _SliderSectionState extends State<SliderSection> {
           ),
           const SizedBox(height: 8),
           SizedBox(
-            height: MediaQuery.of(context).size.height * 0.7,
+            height: MediaQuery.of(context).size.height * 0.8,
             child: Stack(
               children: [
                 Row(

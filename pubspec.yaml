@@ -10,10 +10,21 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  firebase_core: ^3.11.0
+  firebase_auth: ^5.4.2
+  cloud_firestore: ^5.6.3
+  firebase_analytics: ^11.4.2
+  firebase_messaging: ^15.2.2
   cupertino_icons: ^1.0.8
   video_player: ^2.5.0 # Añadimos video_player para reproducir videos
   flutter_animate: ^4.5.2
   carousel_slider: ^5.0.0
+  three_dart: ^0.0.16
+  flutter_gl: ^0.0.21
+  rive: ^0.13.20
+  auto_size_text: ^3.0.0
+  firebase_storage: ^12.4.2
+  widget_and_text_animator: ^1.1.5
 
 dev_dependencies:
   flutter_test:
@@ -43,3 +54,6 @@ flutter:
     - assets/images/project4.png
     - assets/images/project5.png
     - assets/images/project6.png
+    - assets/animate/learning.riv
+    - assets/animate/logo.mp4
+
