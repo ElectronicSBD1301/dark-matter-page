@@ -54,6 +54,12 @@ flutter:
     - assets/images/project4.png
     - assets/images/project5.png
     - assets/images/project6.png
-    - assets/animate/learning.riv
     - assets/animate/logo.mp4
+    - assets/images/innovation.jpg
+    - assets/images/software_development.mp4
+    - assets/images/it_consulting.jpg
+    - assets/images/hardware_software.jpg
+    - assets/images/cybersecurity.mp4
+    - assets/images/ai_automation.mp4
+    - assets/images/experience.jpg
 

@@ -26,6 +26,86 @@ class _SliderSectionState extends State<SliderSection> {
   Timer? _autoSlideTimer;
 
   // Slides reales. Cada slide de tipo 'video' podría tener su propia 'videoAsset'.
+  // Slides reales con descripciones mejoradas y archivos multimedia organizados.
+  final List<Map<String, String>> _slides = [
+    {
+      'title': 'Innovación',
+      'description': 'En Dark Matter Code, la innovación es nuestro motor principal. '
+          'Nos dedicamos a crear soluciones tecnológicas avanzadas que transforman negocios. '
+          'Desde inteligencia artificial hasta automatización, aplicamos tecnología de vanguardia '
+          'para garantizar que tu empresa esté siempre un paso adelante.',
+      'type': 'text',
+      'image': 'assets/images/innovation.jpg',
+    },
+    {
+      'title': 'Desarrollo de Software',
+      'description':
+          'Diseñamos y desarrollamos software a la medida, adaptándonos a las necesidades '
+              'de cada cliente. Nuestro equipo crea aplicaciones web y móviles eficientes, seguras y escalables, '
+              'optimizando procesos para maximizar la productividad.',
+      'type': 'video',
+      'videoAsset': 'assets/images/software_development.mp4',
+    },
+    {
+      'title': 'Consultoría en TI',
+      'description':
+          'Brindamos asesoría estratégica en tecnología para empresas que buscan optimizar sus sistemas y procesos. '
+              'Desde análisis de datos hasta migraciones a la nube, te guiamos en la transformación digital.',
+      'type': 'text',
+      'image': 'assets/images/it_consulting.jpg',
+    },
+    {
+      'title': 'Integración de Hardware y Software',
+      'description':
+          'Desarrollamos soluciones integrales que combinan hardware y software para mejorar la eficiencia operativa. '
+              'Desde IoT hasta automatización industrial, conectamos dispositivos inteligentes con plataformas digitales.',
+      'type': 'text',
+      'image': 'assets/images/hardware_software.jpg',
+    },
+    {
+      'title': 'Ciberseguridad y Protección de Datos',
+      'description':
+          'Protegemos tu información con soluciones avanzadas de ciberseguridad. Implementamos cifrado, firewalls, '
+              'y monitoreo en tiempo real para garantizar la integridad de tus datos y prevenir amenazas digitales.',
+      'type': 'video',
+      'videoAsset': 'assets/images/cybersecurity.mp4',
+    },
+    {
+      'title': 'Automatización e Inteligencia Artificial',
+      'description':
+          'La inteligencia artificial está revolucionando la industria, y en Dark Matter Code '
+              'la utilizamos para optimizar procesos, reducir costos y mejorar la toma de decisiones '
+              'a través de modelos predictivos y automatización avanzada.',
+      'type': 'video',
+      'videoAsset': 'assets/images/ai_automation.mp4',
+    },
+    {
+      'title': 'Nuestra Experiencia en Acción',
+      'description':
+          'Descubre cómo nuestras soluciones tecnológicas han ayudado a empresas a innovar y crecer. '
+              'Mira algunos de nuestros proyectos en acción y conoce cómo trabajamos.',
+      'type': 'text',
+      'image': 'assets/images/experience.jpg',
+    },
+    /*{
+    'title': 'Casos de Éxito',
+    'description': 
+        'Explora historias de éxito de empresas que han transformado sus operaciones '
+        'gracias a nuestras soluciones digitales. La innovación aplicada en el mundo real.',
+    'type': 'video',
+    'videoAsset': 'assets/videos/success_cases.mp4',
+  },
+  {
+    'title': 'Contáctanos',
+    'description': 
+        '¿Listo para llevar tu empresa al siguiente nivel? En Dark Matter Code '
+        'estamos aquí para ayudarte a construir el futuro con tecnología. ¡Hablemos!',
+    'type': 'text',
+    'image': 'assets/images/contact.png',
+  },*/
+  ];
+/*
+  
   final List<Map<String, String>> _slides = [
     {
       'title': 'Innovación',
@@ -55,7 +135,7 @@ class _SliderSectionState extends State<SliderSection> {
       'videoAsset': 'assets/images/slide.mp4',
     },
   ];
-
+*/
   @override
   void initState() {
     super.initState();
