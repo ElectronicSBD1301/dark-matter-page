@@ -1,15 +1,10 @@
-import 'package:dark_matter_page/animate/prueba.dart';
-import 'package:dark_matter_page/animate/prueba2.dart';
-import 'package:dark_matter_page/animate/riv1.dart';
-import 'package:dark_matter_page/animate/riv2.dart';
 import 'package:dark_matter_page/home/componet/hero_content.dart';
 import 'package:dark_matter_page/widgets/project_slide.dart';
 import 'package:dark_matter_page/widgets/slider_section.dart';
 import 'package:flutter/material.dart';
-import 'package:video_player/video_player.dart';
 import '../widgets/custom_appbar.dart';
-import '../widgets/custom_painter_bg.dart';
 import '../widgets/custom_footer.dart';
+import 'package:dark_matter_page/widgets/forumlario.dart'; // Importa el formulario de contacto
 
 // Claves GlobalKey para hacer scroll a secciones específicas
 final aboutKey = GlobalKey();
@@ -32,7 +27,7 @@ class _HomePageState extends State<HomePage> {
   // o puedes manejar varios si cada slide tiene su propio video
 
   // Carrusel de proyectos
-  late PageController _projectsPageController;
+  // late PageController _projectsPageController;
 
   @override
   void initState() {
@@ -40,17 +35,17 @@ class _HomePageState extends State<HomePage> {
     _scrollController = ScrollController();
 
     // Para el carrusel de proyectos
-    _projectsPageController =
+    /* _projectsPageController =
         PageController(viewportFraction: 0.4, initialPage: 1000);
-
+*/
     // Iniciar auto-scroll en la sección de proyectos
-    WidgetsBinding.instance.addPostFrameCallback((_) => _autoScrollProjects());
+    // WidgetsBinding.instance.addPostFrameCallback((_) => _autoScrollProjects());
   }
 
   @override
   void dispose() {
     _scrollController.dispose();
-    _projectsPageController.dispose();
+    // _projectsPageController.dispose();
     super.dispose();
   }
 
@@ -79,6 +74,7 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+/*
   // Auto-scroll para el carrusel de proyectos (loop infinito)
   void _autoScrollProjects() {
     Future.delayed(const Duration(seconds: 3), () {
@@ -91,7 +87,7 @@ class _HomePageState extends State<HomePage> {
       }
     });
   }
-
+*/
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -225,83 +221,6 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
-        ],
-      ),
-    );
-  }
-
-  // ============================
-  //   SECCIÓN “Proyectos”
-  // ============================
-  Widget _buildProjectsSection() {
-    return Container(
-      key: projectsKey,
-      color: Colors.transparent,
-      padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          const Text(
-            'Nuestros proyectos',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 20),
-          SizedBox(
-            height: 250,
-            child: PageView.builder(
-              controller: _projectsPageController,
-              itemBuilder: (context, index) {
-                // Ciclo infinito
-                int projectIndex = (index % 6) + 1;
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: Image.asset(
-                      'assets/images/project$projectIndex.png',
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
-          const SizedBox(height: 40),
-          Column(
-            children: [
-              const Text(
-                '¿Estás interesado en ver más proyectos?',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 15),
-              ElevatedButton(
-                onPressed: () {
-                  // Acción "VER TODOS"
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.purpleAccent,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                ),
-                child: const Text(
-                  'VER TODOS',
-                  style: TextStyle(color: Colors.white, fontSize: 16),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 40),
         ],
       ),
     );

@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:dark_matter_page/widgets/forumlario.dart';
 import 'package:flutter/material.dart';
 import 'package:widget_and_text_animator/widget_and_text_animator.dart';
 
@@ -69,6 +70,25 @@ class _HeroTextState extends State<HeroText> {
     }
   }
 
+  void _showContactForm(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Container(
+            width: MediaQuery.of(context).size.width * 0.8,
+            height: MediaQuery.of(context).size.height * 0.8,
+            padding: const EdgeInsets.all(20),
+            child: const ContactForm(),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -79,7 +99,10 @@ class _HeroTextState extends State<HeroText> {
           const SizedBox(height: 40.0),
           About(fontSize: aboutFontSize),
           const SizedBox(height: 20.0),
-          Button(fontSize: buttonFontSize),
+          Button(
+            fontSize: buttonFontSize,
+            onContactPressed: () => _showContactForm(context),
+          ),
         ],
       ),
     );

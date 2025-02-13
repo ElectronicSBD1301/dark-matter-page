@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:dark_matter_page/widgets/view_project.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math; // <-- Importar 'dart:math' con alias 'math'
@@ -22,6 +23,8 @@ class SlideData {
   final String image;
   final String title;
   final String subtitle;
+  final List<String> relatedImages; // Imágenes relacionadas
+  final String description; // Descripción del proyecto
 
   SlideData({
     required this.slideWidth,
@@ -29,6 +32,8 @@ class SlideData {
     required this.image,
     this.title = '',
     this.subtitle = '',
+    this.relatedImages = const [],
+    this.description = '',
   });
 }
 
@@ -64,6 +69,12 @@ class _ProjectsSectionState extends State<ProjectsSection> {
       slideWidth: 200,
       type: 'normal',
       image: 'assets/images/project5.png',
+      relatedImages: [
+        'assets/images/project5.png',
+        'assets/images/project5.png',
+        'assets/images/project5.png',
+      ],
+      description: 'Descripción del proyecto',
     ),
     SlideData(
       slideWidth: 300,
@@ -257,6 +268,10 @@ class _ProjectsSectionState extends State<ProjectsSection> {
                 ElevatedButton(
                   onPressed: () {
                     // tu acción
+                    Navigator.pushNamed(
+                      context,
+                      '/projects',
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.purpleAccent,
@@ -327,15 +342,22 @@ class _ProjectsSectionState extends State<ProjectsSection> {
       // Imagen, ocupa el resto
       if (slide.image.isNotEmpty)
         Expanded(
-          child: Container(
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: Colors.transparent,
-              borderRadius: BorderRadius.circular(5),
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(5),
-              child: Image.asset(slide.image, fit: BoxFit.cover),
+          child: GestureDetector(
+            onTap: () {
+              if (slide.relatedImages.isNotEmpty) {
+                showProjectDetails(slide, context);
+              }
+            },
+            child: Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: Colors.transparent,
+                borderRadius: BorderRadius.circular(5),
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(5),
+                child: Image.asset(slide.image, fit: BoxFit.cover),
+              ),
             ),
           ),
         )
@@ -361,13 +383,16 @@ class _ProjectsSectionState extends State<ProjectsSection> {
 
   /// Slide normal, sin margenes verticales y menor borde
   Widget _buildNormalSlide(SlideData slide) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(5), // borde menor
-      child: (slide.image.isNotEmpty)
-          ? Image.asset(slide.image, fit: BoxFit.cover)
-          : const Center(
-              child: Text('No Image', style: TextStyle(color: Colors.white))),
-    );
+    return slide.image.isNotEmpty
+        ? GestureDetector(
+            onTap: () => showProjectDetails(slide, context),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(5), // borde menor
+              child: Image.asset(slide.image, fit: BoxFit.cover),
+            ),
+          )
+        : const Center(
+            child: Text('No Image', style: TextStyle(color: Colors.white)));
   }
 
   // (Opcional) Flechas => No se detiene, así que no es muy útil
