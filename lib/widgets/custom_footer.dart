@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class CustomFooter extends StatelessWidget {
-  const CustomFooter({super.key});
+  final double? height;
+
+  const CustomFooter({super.key, this.height});
 
   void _launchURL(String url) async {
     if (await canLaunch(url)) {
@@ -14,7 +16,9 @@ class CustomFooter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return Container(
+      height:
+          height, // Usar el valor de height si se proporciona, de lo contrario usar 100
       padding: const EdgeInsets.all(28.0),
       child: LayoutBuilder(
         builder: (context, constraints) {

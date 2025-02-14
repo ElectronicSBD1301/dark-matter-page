@@ -90,6 +90,9 @@ class _HomePageState extends State<HomePage> {
 */
   @override
   Widget build(BuildContext context) {
+    bool isVertical =
+        MediaQuery.of(context).size.height > MediaQuery.of(context).size.width;
+
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: CustomAppBar(
@@ -120,7 +123,9 @@ class _HomePageState extends State<HomePage> {
                   child: SliderSection(),
                 ),
               ),
-              SizedBox(key: servicesKey, child: _buildFutureSection()),
+              SizedBox(
+                  key: servicesKey, child: _buildFutureSection(isVertical)),
+
               SizedBox(key: projectsKey, child: ProjectsSection()),
 
               /// 🚀 Footer
@@ -139,89 +144,107 @@ class _HomePageState extends State<HomePage> {
   // ============================
   //   SECCIÓN “Construye para el futuro”
   // ============================
-  Widget _buildFutureSection() {
+  Widget _buildFutureSection(bool isVertical) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
       color: Colors.black,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
+      child: isVertical
+          ? Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                // Imagen arriba sin Expanded
+                SizedBox(child: imagefuture()),
+                const SizedBox(height: 20),
+                // Texto abajo sin Expanded
+                SizedBox(child: textfuture(isVertical)),
+              ],
+            )
+          : Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                // Imagen a la izquierda con Expanded
+                Expanded(flex: 1, child: imagefuture()),
+                const SizedBox(width: 20),
+                // Texto a la derecha con Expanded
+                Expanded(flex: 2, child: textfuture(isVertical)),
+              ],
+            ),
+    );
+  }
+
+  Widget textfuture(bool isVertical) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.black,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Column(
+        mainAxisAlignment:
+            isVertical ? MainAxisAlignment.center : MainAxisAlignment.start,
+        crossAxisAlignment:
+            isVertical ? CrossAxisAlignment.center : CrossAxisAlignment.start,
         children: [
-          // Imagen a la izquierda
-          Expanded(
-            flex: 1,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: Image.asset(
-                'assets/images/future_image.png',
-                fit: BoxFit.cover,
+          Text(
+            'Construye para el futuro',
+            textAlign: isVertical ? TextAlign.center : TextAlign.justify,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 10),
+          Text(
+            'Es hora de llevar tu negocio al siguiente nivel. '
+            'Dark Matter ayuda a empresas de todos los tamaños a transformar '
+            'sus operaciones y conectar el mundo digital con el físico a través '
+            'de tecnología avanzada.',
+            textAlign: isVertical ? TextAlign.center : TextAlign.justify,
+            style: TextStyle(
+              color: Colors.white70,
+              fontSize: 16,
+              height: 1.5,
+            ),
+          ),
+          const SizedBox(height: 20),
+          TextButton(
+            onPressed: () {
+              // Acción al hacer clic
+            },
+            child: const Text(
+              'Aprende más sobre nosotros',
+              style: TextStyle(
+                color: Colors.purpleAccent,
+                fontSize: 16,
+                decoration: TextDecoration.underline,
               ),
             ),
           ),
-          const SizedBox(width: 20),
-          // Texto a la derecha
-          Expanded(
-            flex: 2,
-            child: Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: Colors.black,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Construye para el futuro',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  const Text(
-                    'Es hora de llevar tu negocio al siguiente nivel. '
-                    'Dark Matter ayuda a empresas de todos los tamaños a transformar '
-                    'sus operaciones y conectar el mundo digital con el físico a través '
-                    'de tecnología avanzada.',
-                    style: TextStyle(
-                      color: Colors.white70,
-                      fontSize: 16,
-                      height: 1.5,
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  TextButton(
-                    onPressed: () {
-                      // Acción al hacer clic
-                    },
-                    child: const Text(
-                      'Aprende más sobre nosotros',
-                      style: TextStyle(
-                        color: Colors.purpleAccent,
-                        fontSize: 16,
-                        decoration: TextDecoration.underline,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      _SocialIcon(
-                          asset: 'assets/images/linkedin.png', size: 50),
-                      const SizedBox(width: 10),
-                      _SocialIcon(
-                          asset: 'assets/images/instagram.png', size: 44),
-                      const SizedBox(width: 10),
-                      _SocialIcon(asset: 'assets/images/tiktok.png', size: 44),
-                    ],
-                  ),
-                ],
-              ),
-            ),
+          const SizedBox(height: 20),
+          Row(
+            mainAxisAlignment:
+                isVertical ? MainAxisAlignment.center : MainAxisAlignment.start,
+            // Centra los iconos siempre
+            children: [
+              _SocialIcon(asset: 'assets/images/linkedin.png', size: 50),
+              const SizedBox(width: 10),
+              _SocialIcon(asset: 'assets/images/instagram.png', size: 44),
+              const SizedBox(width: 10),
+              _SocialIcon(asset: 'assets/images/tiktok.png', size: 44),
+            ],
           ),
         ],
+      ),
+    );
+  }
+
+  Widget imagefuture() {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(10),
+      child: Image.asset(
+        'assets/images/future_image.png',
+        fit: BoxFit.cover,
       ),
     );
   }

@@ -87,55 +87,8 @@ class _SliderSectionState extends State<SliderSection> {
       'type': 'text',
       'image': 'assets/images/experience.jpg',
     },
-    /*{
-    'title': 'Casos de Éxito',
-    'description': 
-        'Explora historias de éxito de empresas que han transformado sus operaciones '
-        'gracias a nuestras soluciones digitales. La innovación aplicada en el mundo real.',
-    'type': 'video',
-    'videoAsset': 'assets/videos/success_cases.mp4',
-  },
-  {
-    'title': 'Contáctanos',
-    'description': 
-        '¿Listo para llevar tu empresa al siguiente nivel? En Dark Matter Code '
-        'estamos aquí para ayudarte a construir el futuro con tecnología. ¡Hablemos!',
-    'type': 'text',
-    'image': 'assets/images/contact.png',
-  },*/
   ];
-/*
-  
-  final List<Map<String, String>> _slides = [
-    {
-      'title': 'Innovación',
-      'description':
-          'En Dark Matter, la innovación es nuestro motor principal...',
-      'type': 'text',
-      'image': 'assets/images/future_image.png',
-    },
-    {
-      'title': 'Video Slide',
-      'description':
-          'Este es un slide de video genérico para mostrar la integración...',
-      'type': 'video',
-      'videoAsset': 'assets/images/slide.mp4',
-    },
-    {
-      'title': 'Soluciones a medida',
-      'description':
-          'Entendemos que cada negocio tiene necesidades únicas. Por eso...',
-      'type': 'text',
-      'image': 'assets/images/future_image.png',
-    },
-    {
-      'title': 'Otro Video Slide',
-      'description': 'Aquí podrías mostrar un video distinto si quisieras...',
-      'type': 'video',
-      'videoAsset': 'assets/images/slide.mp4',
-    },
-  ];
-*/
+
   @override
   void initState() {
     super.initState();
@@ -167,6 +120,9 @@ class _SliderSectionState extends State<SliderSection> {
 
   @override
   Widget build(BuildContext context) {
+    bool isVertical =
+        MediaQuery.of(context).size.height > MediaQuery.of(context).size.width;
+
     return Container(
       // Fondo oscuro + Título
       width: double.infinity,
@@ -187,40 +143,24 @@ class _SliderSectionState extends State<SliderSection> {
             height: MediaQuery.of(context).size.height * 0.8,
             child: Stack(
               children: [
-                Row(
-                  children: [
-                    // === IZQUIERDA: PageView infinito (TEXTOS) ===
-                    Expanded(
-                      flex: 1,
-                      child: PageView.builder(
-                        controller: _pageController,
-                        itemCount: kVirtualItemCount,
-                        onPageChanged: _onPageChanged,
-                        itemBuilder: (context, index) {
-                          final realIndex = index % _slides.length;
-                          final slide = _slides[realIndex];
-                          return _buildTextSide(
-                            title: slide['title'] ?? '',
-                            description: slide['description'] ?? '',
-                          );
-                        },
-                      ),
-                    ),
+                isVertical
+                    ? Column(
+                        children: [
+                          // === DERECHA: Video o Imagen, según slide actual ===
+                          viewright(context, isVertical),
+                          // === IZQUIERDA: PageView infinito (TEXTOS) ===
+                          viewleft(isVertical),
+                        ],
+                      )
+                    : Row(
+                        children: [
+                          // === IZQUIERDA: PageView infinito (TEXTOS) ===
+                          viewleft(isVertical),
 
-                    // === DERECHA: Video o Imagen, según slide actual ===
-                    Expanded(
-                      flex: 1,
-                      child: Container(
-                        color: Colors.black,
-                        margin: EdgeInsets.only(
-                          right: MediaQuery.of(context).size.width * .035,
-                          left: 10,
-                        ),
-                        child: _buildRightSide(_slides[_currentRealIndex]),
+                          // === DERECHA: Video o Imagen, según slide actual ===
+                          viewright(context, isVertical),
+                        ],
                       ),
-                    ),
-                  ],
-                ),
 
                 // FLECHA “anterior”
                 Positioned(
@@ -249,6 +189,39 @@ class _SliderSectionState extends State<SliderSection> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Expanded viewright(BuildContext context, bool isVertical) {
+    return Expanded(
+      flex: 1,
+      child: Container(
+        color: Colors.black,
+        margin: EdgeInsets.only(
+          right: MediaQuery.of(context).size.width * .035,
+          left: 10,
+        ),
+        child: _buildRightSide(_slides[_currentRealIndex], isVertical),
+      ),
+    );
+  }
+
+  Expanded viewleft(bool isVertical) {
+    return Expanded(
+      flex: 1,
+      child: PageView.builder(
+        controller: _pageController,
+        itemCount: kVirtualItemCount,
+        onPageChanged: _onPageChanged,
+        itemBuilder: (context, index) {
+          final realIndex = index % _slides.length;
+          final slide = _slides[realIndex];
+          return _buildTextSide(
+            title: slide['title'] ?? '',
+            description: slide['description'] ?? '',
+          );
+        },
       ),
     );
   }
@@ -314,12 +287,14 @@ class _SliderSectionState extends State<SliderSection> {
   Widget _buildTextSide({
     required String title,
     required String description,
+    bool isVertical = false,
   }) {
     // Mantenemos tu LayoutBuilder y estilos
     return LayoutBuilder(
       builder: (context, constraints) {
         final double maxW = constraints.maxWidth;
-        final double maxH = constraints.maxHeight;
+        final double maxH =
+            isVertical ? constraints.maxHeight * 0.4 : constraints.maxHeight;
 
         final double horizontalPadding = maxW * 0.06;
         final double verticalPadding = maxH * 0.02;
@@ -371,12 +346,13 @@ class _SliderSectionState extends State<SliderSection> {
   // ======================
   // VIDEO o IMAGEN (derecha)
   // ======================
-  Widget _buildRightSide(Map<String, String> slide) {
+  Widget _buildRightSide(Map<String, String> slide, bool isVertical) {
     final type = slide['type'];
 
     return LayoutBuilder(builder: (context, constraints) {
       final double maxW = constraints.maxWidth;
-      final double maxH = constraints.maxHeight;
+      final double maxH =
+          isVertical ? constraints.maxHeight * 0.7 : constraints.maxHeight;
 
       if (type == 'video') {
         if (!_videoInitialized || _videoController == null) {

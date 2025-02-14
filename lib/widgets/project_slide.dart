@@ -67,6 +67,7 @@ class _ProjectsSectionState extends State<ProjectsSection> {
     ),
     SlideData(
       slideWidth: 200,
+      title: "Proyecto personalizado",
       type: 'normal',
       image: 'assets/images/project5.png',
       relatedImages: [
@@ -75,6 +76,7 @@ class _ProjectsSectionState extends State<ProjectsSection> {
         'assets/images/project5.png',
       ],
       description: 'Descripción del proyecto',
+      subtitle: 'Subtítulo del proyecto',
     ),
     SlideData(
       slideWidth: 300,

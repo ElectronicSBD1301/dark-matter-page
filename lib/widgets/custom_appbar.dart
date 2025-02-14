@@ -60,6 +60,8 @@ class _CustomAppBarState extends State<CustomAppBar> {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+
     return NotificationListener<ScrollUpdateNotification>(
       onNotification: (notification) {
         _onScroll(notification.metrics.pixels);
@@ -123,13 +125,9 @@ class _CustomAppBarState extends State<CustomAppBar> {
                       ),
                     ],
                   ),
-                  actions: [
-                    _buildAnimatedButton('Home', widget.onTaphome),
-                    _buildAnimatedButton('Nosotros', widget.onTapAbout),
-                    _buildAnimatedButton('Servicios', widget.onTapServices),
-                    _buildAnimatedButton('Proyectos', widget.onTapProjects),
-                    _buildAnimatedButton('Contactos', widget.onTapContact),
-                  ],
+                  actions: screenWidth < 633
+                      ? _buildPopupMenu()
+                      : _buildDesktopMenu(),
                 ),
               ),
             ),
@@ -139,14 +137,65 @@ class _CustomAppBarState extends State<CustomAppBar> {
     );
   }
 
+  /// Menú en modo **Popup** para dispositivos con `width < 1200px`
+  List<Widget> _buildPopupMenu() {
+    return [
+      PopupMenuButton<String>(
+        icon: const Icon(Icons.menu, color: Colors.white),
+        onSelected: (value) {
+          switch (value) {
+            case 'Home':
+              widget.onTaphome();
+              break;
+            case 'Nosotros':
+              widget.onTapAbout();
+              break;
+            case 'Servicios':
+              widget.onTapServices();
+              break;
+            case 'Proyectos':
+              widget.onTapProjects();
+              break;
+            case 'Contactos':
+              widget.onTapContact();
+              break;
+          }
+        },
+        itemBuilder: (BuildContext context) {
+          return [
+            _buildPopupMenuItem('Home'),
+            _buildPopupMenuItem('Nosotros'),
+            _buildPopupMenuItem('Servicios'),
+            _buildPopupMenuItem('Proyectos'),
+            _buildPopupMenuItem('Contactos'),
+          ];
+        },
+      ),
+    ];
+  }
+
+  /// Menú en **modo Desktop** para dispositivos con `width >= 1200px`
+  List<Widget> _buildDesktopMenu() {
+    return [
+      _buildAnimatedButton('Home', widget.onTaphome),
+      _buildAnimatedButton('Nosotros', widget.onTapAbout),
+      _buildAnimatedButton('Servicios', widget.onTapServices),
+      _buildAnimatedButton('Proyectos', widget.onTapProjects),
+      _buildAnimatedButton('Contactos', widget.onTapContact),
+    ];
+  }
+
+  PopupMenuItem<String> _buildPopupMenuItem(String text) {
+    return PopupMenuItem<String>(
+      value: text,
+      child: Text(text, style: const TextStyle(fontSize: 16)),
+    );
+  }
+
   Widget _buildAnimatedButton(String text, VoidCallback onTap) {
     return MouseRegion(
-      onEnter: (_) => setState(() {
-        _hoveredButton = text; // Guarda el botón activo
-      }),
-      onExit: (_) => setState(() {
-        _hoveredButton = null; // Lo resetea cuando se va el mouse
-      }),
+      onEnter: (_) => setState(() => _hoveredButton = text),
+      onExit: (_) => setState(() => _hoveredButton = null),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12),
         child: GestureDetector(
@@ -168,9 +217,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
               const SizedBox(height: 4),
               AnimatedContainer(
                 duration: const Duration(milliseconds: 200),
-                width: _hoveredButton == text
-                    ? 40
-                    : 0, // La línea solo aparece cuando pasa el mouse
+                width: _hoveredButton == text ? 40 : 0,
                 height: 2,
                 decoration: BoxDecoration(
                   color: Colors.purpleAccent,

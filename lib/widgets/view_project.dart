@@ -1,11 +1,11 @@
+import 'package:animations/animations.dart';
 import 'package:dark_matter_page/widgets/project_slide.dart';
 import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
-import 'package:widget_and_text_animator/widget_and_text_animator.dart';
-import 'package:animations/animations.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 void showProjectDetails(SlideData slide, BuildContext context) {
   if (slide.relatedImages.isEmpty) {
@@ -16,34 +16,57 @@ void showProjectDetails(SlideData slide, BuildContext context) {
     context: context,
     configuration: const FadeScaleTransitionConfiguration(),
     builder: (BuildContext context) {
+      final double screenHeight = MediaQuery.of(context).size.height;
+      final double screenWidth = MediaQuery.of(context).size.width;
+      final bool isLandscape = screenWidth > screenHeight;
+
+      double maxHeight = isLandscape ? screenHeight * 0.85 : screenHeight * 0.7;
+      double maxWidth = isLandscape ? screenWidth * 0.85 : screenWidth * 0.7;
+
+      List<String> imageList = List.from(slide.relatedImages);
+      List<double> aspectRatios = [];
+
+      double totalHeightLeft = 0;
+      double totalHeightRight = 0;
+
+      for (int i = 0; i < imageList.length; i++) {
+        double aspectRatio =
+            isLandscape ? (i % 2 == 0 ? 1.2 : 0.8) : (i % 3 == 0 ? 1.3 : 0.9);
+        aspectRatios.add(aspectRatio);
+
+        if (totalHeightLeft <= totalHeightRight) {
+          totalHeightLeft += 1 / aspectRatio;
+        } else {
+          totalHeightRight += 1 / aspectRatio;
+        }
+      }
+
+      if ((imageList.length % 2) != 0) {
+        double adjustment = (totalHeightLeft > totalHeightRight)
+            ? totalHeightLeft - totalHeightRight
+            : totalHeightRight - totalHeightLeft;
+
+        imageList.add(imageList.first);
+        aspectRatios.add(1 / adjustment);
+      }
+
       return Dialog(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15),
         ),
         backgroundColor: Colors.black,
-        child: Container(
-          width: MediaQuery.of(context).size.width * 0.85,
-          height: MediaQuery.of(context).size.height * 0.85,
-          padding: const EdgeInsets.all(15),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              AppBar(
-                backgroundColor: Colors.transparent,
-                elevation: 0,
-                leading: InkWell(
-                  borderRadius: BorderRadius.circular(30),
-                  onTap: () => Navigator.of(context).pop(),
-                  child: const Padding(
-                    padding: EdgeInsets.all(10.0),
-                    child:
-                        Icon(Icons.arrow_back, size: 28, color: Colors.white),
-                  ),
-                ),
-                title: Text(
+        child: SizedBox(
+          width: maxWidth,
+          height: maxHeight,
+          child: Padding(
+            padding: const EdgeInsets.all(15),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                AutoSizeText(
                   slide.title,
                   style: GoogleFonts.poppins(
-                    fontSize: 24,
+                    fontSize: 26,
                     fontWeight: FontWeight.w600,
                     color: Colors.white,
                     shadows: [
@@ -54,108 +77,100 @@ void showProjectDetails(SlideData slide, BuildContext context) {
                       ),
                     ],
                   ),
-                  textAlign: TextAlign.center,
+                  maxLines: 1,
+                  minFontSize: 18,
                 ),
-                centerTitle: true,
-                bottom: PreferredSize(
-                  preferredSize: const Size.fromHeight(6.0),
-                  child: Container(
-                    height: 6.0,
-                    decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          Colors.white,
-                          Colors.purpleAccent,
-                          Colors.white
-                        ],
-                        begin: Alignment.centerLeft,
-                        end: Alignment.centerRight,
-                      ),
+                if (slide.subtitle.isNotEmpty)
+                  AutoSizeText(
+                    slide.subtitle,
+                    style: GoogleFonts.poppins(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w400,
+                      color: Colors.white70,
+                    ),
+                    maxLines: 1,
+                    minFontSize: 14,
+                  ),
+                const SizedBox(height: 8),
+                Container(
+                  height: 6.0,
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [Colors.white, Colors.purpleAccent, Colors.white],
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
                     ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 5),
-              Expanded(
-                flex: 1,
-                child: Text(
-                  slide.description,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    color: Colors.white70,
-                  ),
-                ),
-              ),
-              Expanded(
-                flex: 4,
-                child: MasonryGridView.builder(
-                  gridDelegate:
-                      const SliverSimpleGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                  ),
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                  itemCount: slide.relatedImages.length +
-                      (slide.relatedImages.length % 2 == 1 ? 1 : 0),
-                  itemBuilder: (context, index) {
-                    if (index >= slide.relatedImages.length) {
-                      return const SizedBox
-                          .shrink(); // Espacio vacío si es impar
-                    }
-                    double aspectRatio = (index % 4 == 0)
-                        ? 1.5
-                        : (index % 3 == 0)
-                            ? 1.2
-                            : 0.75;
-                    return AspectRatio(
-                      aspectRatio: aspectRatio,
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => FullScreenGallery(
-                                images: slide.relatedImages,
-                                initialIndex: index,
-                              ),
-                            ),
-                          );
-                        },
-                        child: Hero(
-                          tag: slide.relatedImages[index],
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            child: Image.asset(
-                              slide.relatedImages[index],
-                              fit: BoxFit.cover,
-                            ),
+                const SizedBox(height: 10),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        MasonryGridView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          gridDelegate:
+                              const SliverSimpleGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
                           ),
+                          crossAxisSpacing: 10,
+                          mainAxisSpacing: 10,
+                          itemCount: imageList.length,
+                          itemBuilder: (context, index) {
+                            return AspectRatio(
+                              aspectRatio: aspectRatios[index],
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) => FullScreenGallery(
+                                        images: imageList,
+                                        initialIndex: index,
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: Hero(
+                                  tag: imageList[index],
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: Image.asset(
+                                      imageList[index],
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
                         ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-              const SizedBox(height: 10),
-              Align(
-                alignment: Alignment.centerRight,
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.pinkAccent,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 24,
-                      vertical: 12,
+                        const SizedBox(height: 10),
+                      ],
                     ),
                   ),
-                  child: const Text('Cerrar', style: TextStyle(fontSize: 18)),
                 ),
-              ),
-            ],
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.pinkAccent,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 12,
+                      ),
+                    ),
+                    child: const Text('Cerrar', style: TextStyle(fontSize: 18)),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       );

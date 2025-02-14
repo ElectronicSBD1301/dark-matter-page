@@ -9,13 +9,15 @@ class DesktopHero extends StatefulWidget {
   _DesktopHeroState createState() => _DesktopHeroState();
 }
 
-class _DesktopHeroState extends State<DesktopHero> {
+class _DesktopHeroState extends State<DesktopHero> with WidgetsBindingObserver {
   late VideoPlayerController _backgroundController;
   bool _isBackgroundInitialized = false;
 
   @override
   void initState() {
     super.initState();
+
+    WidgetsBinding.instance.addObserver(this); // <- OBSERVADOR
     _initializeVideo();
   }
 
@@ -41,8 +43,16 @@ class _DesktopHeroState extends State<DesktopHero> {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _backgroundController.dispose();
     super.dispose();
+  }
+
+  // Se llama cuando cambian las métricas de la ventana (ej: resize en web)
+  @override
+  void didChangeMetrics() {
+    super.didChangeMetrics();
+    setState(() {}); // fuerza el rebuild para recalcular tamaños
   }
 
   @override
@@ -74,24 +84,26 @@ class _DesktopHeroState extends State<DesktopHero> {
             ),
           ),
         // Contenido principal
-        SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.symmetric(
-                vertical: 20.0, horizontal: mediaQuery.width * 0.07),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const SizedBox(height: 75.0),
-                Center(
-                  child: HeroText(mediaQuery: mediaQuery),
-                ),
-                // Sección "tecno()" bien posicionada
-                Padding(
-                  padding: const EdgeInsets.only(top: 40),
-                  child: tecno(),
-                ),
-              ],
+        Center(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                  vertical: 20.0, horizontal: mediaQuery.width * 0.07),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const SizedBox(height: 75.0),
+                  Center(
+                    child: HeroText(mediaQuery: mediaQuery),
+                  ),
+                  // Sección "tecno()" bien posicionada
+                  Padding(
+                    padding: const EdgeInsets.only(top: 40),
+                    child: tecno(),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
