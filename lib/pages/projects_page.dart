@@ -113,13 +113,16 @@ class _ProjectsPageState extends State<ProjectsPage> {
     );
   }
 
+  //double headerHeight = 0.35; // Puedes ajustarlo o quitarlo si no quieres altura fija
+
   Widget _buildHeaderSection(
       BuildContext context, double screenWidth, double screenHeight) {
     final bool isWideScreen = screenWidth / screenHeight > 1.6;
 
     return Container(
       width: screenWidth,
-      height: screenHeight * headerHeight,
+      // Quita el alto fijo para dejar que el contenedor crezca
+      // height: screenHeight * headerHeight, // <- COMENTA O ELIMINA ESTA LÍNEA
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         image: const DecorationImage(
@@ -132,129 +135,105 @@ class _ProjectsPageState extends State<ProjectsPage> {
         ),
       ),
       child: Padding(
-        padding:
-            EdgeInsets.symmetric(horizontal: screenWidth * 0.05, vertical: 10),
+        padding: EdgeInsets.symmetric(
+          horizontal: screenWidth * 0.05,
+          vertical: 10,
+        ),
+        // Cambia entre Row/Column según la relación de aspecto
         child: isWideScreen
             ? Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  MouseRegion(
-                    onEnter: (_) => setState(() => _isHoveringBack = true),
-                    onExit: (_) => setState(() => _isHoveringBack = false),
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 200),
-                        padding: const EdgeInsets.all(8.0),
-                        decoration: BoxDecoration(
-                          color: _isHoveringBack
-                              ? Colors.purpleAccent.withOpacity(0.7)
-                              : Colors.transparent,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: const Icon(
-                          Icons.arrow_back,
-                          color: Colors.white,
-                          size: 30,
-                        ),
-                      ),
-                    ),
-                  ),
+                  // BOTÓN REGRESAR
+                  _buildBackButton(context),
                   const SizedBox(width: 20),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Flexible(
-                          child: Text(
-                            'Proyectos Destacados',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: titleFontSize *
-                                  0.8, // Reducir el tamaño del texto
-                              fontWeight: FontWeight.bold,
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                          ),
+                  // TEXTO SIN Flexible
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Proyectos Destacados',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: titleFontSize,
+                          fontWeight: FontWeight.bold,
                         ),
-                        const SizedBox(height: 10),
-                        Flexible(
-                          child: Text(
-                            'Hemos trabajado con empresas de diversos sectores,\n'
-                            'creando soluciones digitales que impulsan su crecimiento.\n'
-                            'Estos son algunos de nuestros proyectos destacados.',
-                            style: TextStyle(
-                              color: Colors.white70,
-                              fontSize: aboutFontSize *
-                                  0.8, // Reducir el tamaño del texto
-                              height: 1.5,
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 3,
-                          ),
+                        // Quitar overflow y maxLines
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                        'Hemos trabajado con empresas de diversos sectores,\n'
+                        'creando soluciones digitales que impulsan su crecimiento.\n'
+                        'Estos son algunos de nuestros proyectos destacados.',
+                        style: TextStyle(
+                          color: Colors.white70,
+                          fontSize: aboutFontSize,
+                          height: 1.5,
                         ),
-                      ],
-                    ),
+                        // Quitar overflow y maxLines
+                      ),
+                    ],
                   ),
                 ],
               )
-            : Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    MouseRegion(
-                      onEnter: (_) => setState(() => _isHoveringBack = true),
-                      onExit: (_) => setState(() => _isHoveringBack = false),
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 200),
-                          padding: const EdgeInsets.all(8.0),
-                          decoration: BoxDecoration(
-                            color: _isHoveringBack
-                                ? Colors.purpleAccent.withOpacity(0.7)
-                                : Colors.transparent,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: const Icon(
-                            Icons.arrow_back,
-                            color: Colors.white,
-                            size: 30,
-                          ),
-                        ),
-                      ),
+            : Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // BOTÓN REGRESAR
+                  _buildBackButton(context),
+                  const SizedBox(height: 20),
+                  Text(
+                    'Proyectos Destacados',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: titleFontSize,
+                      fontWeight: FontWeight.bold,
                     ),
-                    const SizedBox(height: 20),
-                    Text(
-                      'Proyectos Destacados',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: titleFontSize,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      overflow: TextOverflow.ellipsis,
+                    // Quitar overflow y maxLines
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    'Hemos trabajado con empresas de diversos sectores,\n'
+                    'creando soluciones digitales que impulsan su crecimiento.\n'
+                    'Estos son algunos de nuestros proyectos destacados.',
+                    style: TextStyle(
+                      color: Colors.white70,
+                      fontSize: aboutFontSize,
+                      height: 1.5,
                     ),
-                    const SizedBox(height: 10),
-                    Text(
-                      'Hemos trabajado con empresas de diversos sectores,\n'
-                      'creando soluciones digitales que impulsan su crecimiento.\n'
-                      'Estos son algunos de nuestros proyectos destacados.',
-                      style: TextStyle(
-                        color: Colors.white70,
-                        fontSize: aboutFontSize,
-                        height: 1.5,
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 3,
-                    ),
-                  ],
-                ),
+                    // Quitar overflow y maxLines
+                  ),
+                ],
               ),
+      ),
+    );
+  }
+
+// Extraer la lógica del botón en un método para mayor claridad
+  Widget _buildBackButton(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHoveringBack = true),
+      onExit: (_) => setState(() => _isHoveringBack = false),
+      child: GestureDetector(
+        onTap: () {
+          Navigator.pop(context);
+        },
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          padding: const EdgeInsets.all(8.0),
+          decoration: BoxDecoration(
+            color: _isHoveringBack
+                ? Colors.purpleAccent.withOpacity(0.7)
+                : Colors.transparent,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: const Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+            size: 30,
+          ),
+        ),
       ),
     );
   }

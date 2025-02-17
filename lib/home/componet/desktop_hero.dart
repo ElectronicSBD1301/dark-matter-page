@@ -3,7 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
 class DesktopHero extends StatefulWidget {
-  const DesktopHero({Key? key}) : super(key: key);
+  final VoidCallback onTapServices;
+  DesktopHero({
+    Key? key,
+    required this.onTapServices,
+  }) : super(key: key);
 
   @override
   _DesktopHeroState createState() => _DesktopHeroState();
@@ -95,7 +99,9 @@ class _DesktopHeroState extends State<DesktopHero> with WidgetsBindingObserver {
                 children: [
                   const SizedBox(height: 75.0),
                   Center(
-                    child: HeroText(mediaQuery: mediaQuery),
+                    child: HeroText(
+                        mediaQuery: mediaQuery,
+                        onTapServices: widget.onTapServices),
                   ),
                   // Sección "tecno()" bien posicionada
                   Padding(

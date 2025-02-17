@@ -2,6 +2,7 @@ import 'package:dark_matter_page/home/componet/hero_content.dart';
 import 'package:dark_matter_page/widgets/project_slide.dart';
 import 'package:dark_matter_page/widgets/slider_section.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../widgets/custom_appbar.dart';
 import '../widgets/custom_footer.dart';
 import 'package:dark_matter_page/widgets/forumlario.dart'; // Importa el formulario de contacto
@@ -111,7 +112,9 @@ class _HomePageState extends State<HomePage> {
                 key: homekey,
                 height: MediaQuery.of(context).size.height,
                 width: double.infinity,
-                child: HeroContent(),
+                child: HeroContent(
+                  onTapServices: () => _scrollToSection(servicesKey),
+                ),
               ),
 
               /// 🔽 Secciones siguientes (Slider, Proyectos, Footer)
@@ -227,11 +230,20 @@ class _HomePageState extends State<HomePage> {
                 isVertical ? MainAxisAlignment.center : MainAxisAlignment.start,
             // Centra los iconos siempre
             children: [
-              _SocialIcon(asset: 'assets/images/linkedin.png', size: 50),
+              _SocialIcon(
+                  asset: 'assets/images/linkedin.png',
+                  size: 50,
+                  url: 'https://www.linkedin.com/company/darkmattercode'),
               const SizedBox(width: 10),
-              _SocialIcon(asset: 'assets/images/instagram.png', size: 44),
+              _SocialIcon(
+                  asset: 'assets/images/instagram.png',
+                  size: 44,
+                  url: 'https://www.instagram.com/darkmattercode'),
               const SizedBox(width: 10),
-              _SocialIcon(asset: 'assets/images/tiktok.png', size: 44),
+              _SocialIcon(
+                  asset: 'assets/images/tiktok.png',
+                  size: 44,
+                  url: 'https://www.tiktok.com/@darkmattercode'),
             ],
           ),
         ],
@@ -255,18 +267,30 @@ class _HomePageState extends State<HomePage> {
 // ==============================
 class _SocialIcon extends StatelessWidget {
   final String asset;
+  final String url;
   final double size;
-  const _SocialIcon({required this.asset, this.size = 24});
+  const _SocialIcon({required this.asset, this.size = 24, this.url = ''});
+
+  void _launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8),
-      child: Image.asset(
-        asset,
-        width: size,
-        height: size,
-        fit: BoxFit.contain,
+      child: InkWell(
+        onTap: () => _launchURL(url),
+        child: Image.asset(
+          asset,
+          width: size,
+          height: size,
+          fit: BoxFit.contain,
+        ),
       ),
     );
   }

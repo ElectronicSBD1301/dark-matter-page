@@ -6,7 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:widget_and_text_animator/widget_and_text_animator.dart';
 
 class HeroText extends StatefulWidget {
-  const HeroText({Key? key, required Size mediaQuery}) : super(key: key);
+  final VoidCallback onTapServices;
+  const HeroText({
+    Key? key,
+    required Size mediaQuery,
+    required this.onTapServices,
+  }) : super(key: key);
 
   @override
   _HeroTextState createState() => _HeroTextState();
@@ -70,25 +75,6 @@ class _HeroTextState extends State<HeroText> {
     }
   }
 
-  void _showContactForm(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Container(
-            width: MediaQuery.of(context).size.width * 0.8,
-            height: MediaQuery.of(context).size.height * 0.8,
-            padding: const EdgeInsets.all(20),
-            child: const ContactForm(),
-          ),
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -101,12 +87,33 @@ class _HeroTextState extends State<HeroText> {
           const SizedBox(height: 20.0),
           Button(
             fontSize: buttonFontSize,
-            onContactPressed: () => _showContactForm(context),
+            onContactPressed: () => showContactForm(context),
+            onServicesPressed: widget.onTapServices,
           ),
         ],
       ),
     );
   }
+}
+
+//---contacform---
+void showContactForm(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Container(
+          width: MediaQuery.of(context).size.width * 0.8,
+          height: MediaQuery.of(context).size.height * 0.8,
+          padding: const EdgeInsets.all(20),
+          child: const ContactForm(),
+        ),
+      );
+    },
+  );
 }
 
 // ---------------------- BOTONES ----------------------
@@ -309,6 +316,7 @@ class TitleDark extends StatelessWidget {
               fontWeight: FontWeight.w900,
               fontFamily: 'Santana',
             ),
+            spaceDelay: Duration(seconds: 15),
             incomingEffect: WidgetTransitionEffects.incomingScaleUp(),
           ),
         ),

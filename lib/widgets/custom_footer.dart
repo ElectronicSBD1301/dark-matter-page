@@ -1,3 +1,4 @@
+import 'package:dark_matter_page/home/componet/hero_text.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -30,13 +31,13 @@ class CustomFooter extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Wrap(
-                      alignment: WrapAlignment.spaceBetween,
+                      alignment: WrapAlignment.center,
                       crossAxisAlignment: WrapCrossAlignment.center,
                       spacing: 20,
                       runSpacing: 20,
                       children: [
-                        _buildContactInfo(),
-                        _buildSocialSection(),
+                        _buildContactInfo(isMobile),
+                        _buildSocialSection(isMobile, context),
                       ],
                     ),
                   ],
@@ -44,8 +45,8 @@ class CustomFooter extends StatelessWidget {
               : Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    _buildContactInfo(),
-                    _buildSocialSection(),
+                    _buildContactInfo(isMobile),
+                    _buildSocialSection(isMobile, context),
                   ],
                 );
         },
@@ -53,11 +54,14 @@ class CustomFooter extends StatelessWidget {
     );
   }
 
-  Widget _buildContactInfo() {
+  Widget _buildContactInfo(bool isMobile) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment:
+          isMobile ? CrossAxisAlignment.center : CrossAxisAlignment.start,
       children: [
         Row(
+          mainAxisAlignment:
+              isMobile ? MainAxisAlignment.center : MainAxisAlignment.start,
           children: [
             Image.asset('assets/images/logo.png', width: 40, height: 40),
             const SizedBox(width: 8),
@@ -69,6 +73,8 @@ class CustomFooter extends StatelessWidget {
         ),
         const SizedBox(height: 12),
         Row(
+          mainAxisAlignment:
+              isMobile ? MainAxisAlignment.center : MainAxisAlignment.start,
           children: const [
             Icon(Icons.phone, color: Colors.white),
             SizedBox(width: 8),
@@ -77,6 +83,8 @@ class CustomFooter extends StatelessWidget {
         ),
         const SizedBox(height: 6),
         Row(
+          mainAxisAlignment:
+              isMobile ? MainAxisAlignment.center : MainAxisAlignment.start,
           children: const [
             Icon(Icons.email, color: Colors.white),
             SizedBox(width: 8),
@@ -93,12 +101,13 @@ class CustomFooter extends StatelessWidget {
     );
   }
 
-  Widget _buildSocialSection() {
+  Widget _buildSocialSection(bool isMobile, BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
+      crossAxisAlignment:
+          isMobile ? CrossAxisAlignment.center : CrossAxisAlignment.end,
       children: [
         ElevatedButton(
-          onPressed: () {},
+          onPressed: () => showContactForm(context),
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.blueAccent,
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),

@@ -4,13 +4,20 @@ import 'package:dark_matter_page/home/componet/tablet_hero.dart';
 import 'package:flutter/material.dart';
 
 class HeroContent extends StatelessWidget {
-  const HeroContent({Key? key}) : super(key: key);
+  final VoidCallback onTapServices;
+  const HeroContent({
+    Key? key,
+    required this.onTapServices,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: ((context, constraints) {
-        return const DesktopHero();
+        return DesktopHero(
+          // <- Cambiar por MobileHero o TabletHero
+          onTapServices: onTapServices,
+        );
         /* if (constraints.maxWidth >= 850) {
          
         } else if (constraints.maxWidth >= 600) {
