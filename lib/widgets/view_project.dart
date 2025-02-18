@@ -178,7 +178,7 @@ void showProjectDetails(SlideData slide, BuildContext context) {
   );
 }
 
-class FullScreenGallery extends StatelessWidget {
+class FullScreenGallery extends StatefulWidget {
   final List<String> images;
   final int initialIndex;
 
@@ -188,22 +188,109 @@ class FullScreenGallery extends StatelessWidget {
   });
 
   @override
+  _FullScreenGalleryState createState() => _FullScreenGalleryState();
+}
+
+class _FullScreenGalleryState extends State<FullScreenGallery> {
+  late PageController _pageController;
+  late int _currentIndex;
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController(initialPage: widget.initialIndex);
+    _currentIndex = widget.initialIndex;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      body: PhotoViewGallery.builder(
-        itemCount: images.length,
-        pageController: PageController(initialPage: initialIndex),
-        builder: (context, index) {
-          return PhotoViewGalleryPageOptions(
-            imageProvider: AssetImage(images[index]),
-            minScale: PhotoViewComputedScale.contained,
-            maxScale: PhotoViewComputedScale.covered * 2,
-            heroAttributes: PhotoViewHeroAttributes(tag: images[index]),
-          );
-        },
-        scrollPhysics: const BouncingScrollPhysics(),
-        backgroundDecoration: const BoxDecoration(color: Colors.black),
+      body: Stack(
+        children: [
+          PhotoViewGallery.builder(
+            itemCount: widget.images.length,
+            pageController: _pageController,
+            onPageChanged: (index) {
+              setState(() {
+                _currentIndex = index;
+              });
+            },
+            builder: (context, index) {
+              return PhotoViewGalleryPageOptions(
+                imageProvider: AssetImage(widget.images[index]),
+                minScale: PhotoViewComputedScale.contained,
+                maxScale: PhotoViewComputedScale.covered * 2,
+                heroAttributes:
+                    PhotoViewHeroAttributes(tag: widget.images[index]),
+              );
+            },
+            scrollPhysics: const BouncingScrollPhysics(),
+            backgroundDecoration: const BoxDecoration(color: Colors.black),
+          ),
+          Positioned(
+            top: 40,
+            right: 20,
+            child: IconButton(
+              icon: const Icon(Icons.close, color: Colors.white, size: 30),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ),
+          Positioned(
+            left: 20,
+            top: MediaQuery.of(context).size.height / 2 - 30,
+            child: IconButton(
+              icon: const Icon(Icons.arrow_back_ios,
+                  color: Colors.white, size: 30),
+              onPressed: () {
+                if (_currentIndex > 0) {
+                  _pageController.previousPage(
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeInOut,
+                  );
+                }
+              },
+            ),
+          ),
+          Positioned(
+            right: 20,
+            top: MediaQuery.of(context).size.height / 2 - 30,
+            child: IconButton(
+              icon: const Icon(Icons.arrow_forward_ios,
+                  color: Colors.white, size: 30),
+              onPressed: () {
+                if (_currentIndex < widget.images.length - 1) {
+                  _pageController.nextPage(
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeInOut,
+                  );
+                }
+              },
+            ),
+          ),
+          Positioned(
+            bottom: 20,
+            left: 0,
+            right: 0,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List.generate(widget.images.length, (index) {
+                return Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 4),
+                  width: 10,
+                  height: 10,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color:
+                        _currentIndex == index ? Colors.white : Colors.white54,
+                  ),
+                );
+              }),
+            ),
+          ),
+        ],
       ),
     );
   }

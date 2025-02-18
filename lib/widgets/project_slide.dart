@@ -25,6 +25,7 @@ class SlideData {
   final String subtitle;
   final List<String> relatedImages; // Imágenes relacionadas
   final String description; // Descripción del proyecto
+  final double imageOpacity; // Opacidad de la imagen
 
   SlideData({
     required this.slideWidth,
@@ -34,6 +35,7 @@ class SlideData {
     this.subtitle = '',
     this.relatedImages = const [],
     this.description = '',
+    this.imageOpacity = 1.0, // Valor predeterminado de opacidad
   });
 }
 
@@ -50,20 +52,35 @@ class _ProjectsSectionState extends State<ProjectsSection> {
     SlideData(
         slideWidth: 280,
         type: 'sub',
-        image: 'assets/images/project1.png',
+        image: 'assets/images/matter.png',
         title: 'DARK',
-        subtitle: 'Soluciones para todas las plataformas'),
+        subtitle: 'Soluciones para todas las plataformas',
+        imageOpacity: 0.3),
     SlideData(
       slideWidth: 350,
       type: 'normal',
-      image: 'assets/images/project4.png',
+      title: "Pickup Workshop",
+      description: 'Descripción del proyecto',
+      subtitle: 'Subtítulo del proyecto',
+      image: 'assets/images/pp0.png',
+      relatedImages: [
+        'assets/images/p00.png',
+        'assets/images/p1.jpg',
+        'assets/images/p2.jpg',
+        'assets/images/p3.jpg',
+        'assets/images/p4.jpg',
+        'assets/images/p5.jpg',
+        'assets/images/p6.jpg',
+      ],
+      imageOpacity: 0.1,
     ),
     SlideData(
       slideWidth: 320,
       type: 'sub',
-      image: 'assets/images/project2.png',
+      image: 'assets/images/dark.png',
       title: 'MATTER',
       subtitle: 'Rendimiento Optimo',
+      imageOpacity: 0.1,
     ),
     SlideData(
       slideWidth: 200,
@@ -77,18 +94,35 @@ class _ProjectsSectionState extends State<ProjectsSection> {
       ],
       description: 'Descripción del proyecto',
       subtitle: 'Subtítulo del proyecto',
+      imageOpacity: 0.1,
     ),
     SlideData(
       slideWidth: 300,
       type: 'sub',
-      image: 'assets/images/project3.png',
+      image: 'assets/images/code.jpg',
       title: 'Code',
       subtitle: 'Eficiencia y Innovación',
+      imageOpacity: 0.3,
     ),
     SlideData(
-      slideWidth: 280,
+      slideWidth: 300,
+      title: "Proyecto de la comunidad",
+      subtitle: 'Subtítulo del proyecto',
+      description: 'Descripción del proyecto',
+      relatedImages: [
+        'assets/images/jade1.jpg',
+        'assets/images/jade2.jpg',
+        'assets/images/jade3.jpg',
+        'assets/images/jade4.jpg',
+        'assets/images/jade5.jpg',
+        'assets/images/jade6.jpg',
+        'assets/images/jade7.jpg',
+        'assets/images/jade8.jpg',
+        'assets/images/jade9.jpg',
+      ],
       type: 'normal',
-      image: 'assets/images/project6.png',
+      image: 'assets/images/jadep.png',
+      imageOpacity: 0.3,
     ),
   ];
 
@@ -358,7 +392,13 @@ class _ProjectsSectionState extends State<ProjectsSection> {
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(5),
-                child: Image.asset(slide.image, fit: BoxFit.cover),
+                child: ColorFiltered(
+                  colorFilter: ColorFilter.mode(
+                    Colors.black.withOpacity(slide.imageOpacity),
+                    BlendMode.darken,
+                  ),
+                  child: Image.asset(slide.image, fit: BoxFit.cover),
+                ),
               ),
             ),
           ),
@@ -390,7 +430,13 @@ class _ProjectsSectionState extends State<ProjectsSection> {
             onTap: () => showProjectDetails(slide, context),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(5), // borde menor
-              child: Image.asset(slide.image, fit: BoxFit.cover),
+              child: ColorFiltered(
+                colorFilter: ColorFilter.mode(
+                  Colors.black.withOpacity(slide.imageOpacity),
+                  BlendMode.darken,
+                ),
+                child: Image.asset(slide.image, fit: BoxFit.cover),
+              ),
             ),
           )
         : const Center(

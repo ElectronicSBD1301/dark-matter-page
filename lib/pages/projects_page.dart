@@ -1,4 +1,6 @@
 import 'package:dark_matter_page/widgets/custom_footer.dart';
+import 'package:dark_matter_page/widgets/project_slide.dart';
+import 'package:dark_matter_page/widgets/view_project.dart';
 import 'package:flutter/material.dart';
 
 class ProjectsPage extends StatefulWidget {
@@ -101,7 +103,6 @@ class _ProjectsPageState extends State<ProjectsPage> {
                   children: [
                     _buildProjectsList(context, screenWidth),
                     const SizedBox(height: 20),
-
                     const CustomFooter(), // Hacer el footer más pequeño
                   ],
                 ),
@@ -210,7 +211,7 @@ class _ProjectsPageState extends State<ProjectsPage> {
     );
   }
 
-// Extraer la lógica del botón en un método para mayor claridad
+  // Extraer la lógica del botón en un método para mayor claridad
   Widget _buildBackButton(BuildContext context) {
     return MouseRegion(
       onEnter: (_) => setState(() => _isHoveringBack = true),
@@ -241,25 +242,40 @@ class _ProjectsPageState extends State<ProjectsPage> {
   Widget _buildProjectsList(BuildContext context, double screenWidth) {
     final projects = [
       {
-        'image': 'assets/images/prueba.jpeg',
-        'title': 'Proyecto 1',
+        'image': 'assets/images/pp0.jpg',
+        'title': 'Pickup Workshop',
         'description': 'Descripción breve del Proyecto 1',
-        'date': 'Enero 2025',
-        'shadowColor': Colors.purpleAccent,
+        'date': 'Enero 2022',
+        'shadowColor': Colors.blueAccent,
         'relatedImages': [
-          'assets/images/project2.png',
-          'assets/images/project3.png'
+          'assets/images/p0.png',
+          'assets/images/p1.jpg',
+          'assets/images/p2.jpg',
+          'assets/images/p3.jpg',
+          'assets/images/p4.jpg',
+          'assets/images/p5.jpg',
+          'assets/images/p6.jpg',
         ],
       },
       {
-        'image': 'assets/images/prueba.jpeg',
+        'image': 'assets/images/jade00.jpg',
         'title': 'Proyecto 2',
         'description': 'Descripción breve del Proyecto 2',
         'date': 'Febrero 2025',
-        'shadowColor': Colors.blueAccent,
+        'shadowColor': Colors.purpleAccent,
         'relatedImages': [
-          'assets/images/project3.png',
-          'assets/images/project4.png'
+          "assets/images/jade0.jpg",
+          "assets/images/jade00.jpg",
+          "assets/images/jade1.jpg",
+          'assets/images/jade2.jpg',
+          'assets/images/jade3.jpg',
+          'assets/images/jade4.jpg',
+          "assets/images/jade5.jpg",
+          "assets/images/jade6.jpg",
+          'assets/images/jade7.jpg',
+          'assets/images/jade8.jpg',
+          'assets/images/jade9.jpg',
+          "assets/images/jade10.jpg",
         ],
       },
       {
@@ -267,7 +283,7 @@ class _ProjectsPageState extends State<ProjectsPage> {
         'title': 'Coming Soon',
         'description': '',
         'date': '',
-        'shadowColor': Colors.greenAccent,
+        'shadowColor': Colors.grey,
         'relatedImages': [],
       },
     ];
@@ -285,112 +301,128 @@ class _ProjectsPageState extends State<ProjectsPage> {
             return MouseRegion(
               onEnter: (_) => _hoveringProjectIndex.value = index,
               onExit: (_) => _hoveringProjectIndex.value = -1,
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 300),
-                margin: EdgeInsets.symmetric(vertical: screenWidth * 0.015),
-                padding: EdgeInsets.all(
-                    screenWidth * 0.025), // Reducir el ancho de cada slide
-                height: screenWidth * 0.28, // Reducir la altura de cada slide
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  image: DecorationImage(
-                    image: AssetImage(project['image'].toString()),
-                    fit: BoxFit.cover,
-                    colorFilter: isHovered
-                        ? null
-                        : ColorFilter.mode(
-                            Colors.black.withOpacity(0.6),
-                            BlendMode.darken,
-                          ),
-                  ),
-                  boxShadow: isHovered
-                      ? [
-                          BoxShadow(
-                            color: (project['shadowColor'] as Color)
-                                    .withOpacity(0.3) ??
-                                Colors.transparent,
-                            blurRadius: 10,
-                            offset: const Offset(0, 4),
-                          )
-                        ]
-                      : [],
-                ),
-                child: Stack(
-                  children: [
-                    AnimatedOpacity(
-                      duration: const Duration(milliseconds: 300),
-                      opacity: isHovered ? 1.0 : 0.7,
-                      child: Container(
-                        alignment: project['title'] == 'Coming Soon'
-                            ? Alignment.center
-                            : Alignment.centerLeft,
-                        padding: EdgeInsets.symmetric(
-                            horizontal: screenWidth * 0.02),
-                        child: Column(
-                          crossAxisAlignment: project['title'] == 'Coming Soon'
-                              ? CrossAxisAlignment.center
-                              : CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              project['title'].toString(),
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: screenWidth *
-                                    0.03, // Reducir el tamaño del texto
-                                fontWeight: FontWeight.bold,
-                              ),
-                              textAlign: project['title'] == 'Coming Soon'
-                                  ? TextAlign.center
-                                  : TextAlign.left,
+              child: GestureDetector(
+                onTap: () {
+                  showProjectDetails(
+                      SlideData(
+                        relatedImages: project['relatedImages'] as List<String>,
+                        subtitle: project['date'].toString(),
+                        title: project['title'].toString(),
+                        description: project['description'].toString(),
+                        slideWidth: 200,
+                        type: 'normal',
+                        image: project['image'].toString(),
+                      ),
+                      context);
+                },
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 300),
+                  margin: EdgeInsets.symmetric(vertical: screenWidth * 0.015),
+                  padding: EdgeInsets.all(
+                      screenWidth * 0.025), // Reducir el ancho de cada slide
+                  height: screenWidth * 0.28, // Reducir la altura de cada slide
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    image: DecorationImage(
+                      image: AssetImage(project['image'].toString()),
+                      fit: BoxFit.cover,
+                      colorFilter: isHovered
+                          ? null
+                          : ColorFilter.mode(
+                              Colors.black.withOpacity(0.6),
+                              BlendMode.darken,
                             ),
-                            if (project['description'].toString().isNotEmpty)
-                              const SizedBox(height: 10),
-                            if (project['description'].toString().isNotEmpty)
-                              Text(
-                                project['description'].toString(),
-                                style: TextStyle(
-                                  color: Colors.white70,
-                                  fontSize: screenWidth *
-                                      0.025, // Reducir el tamaño del texto
-                                ),
-                              ),
-                            if (project['date'].toString().isNotEmpty)
-                              const SizedBox(height: 10),
-                            if (project['date'].toString().isNotEmpty)
-                              Text(
-                                project['date'].toString(),
-                                style: TextStyle(
-                                  color: Colors.white54,
-                                  fontSize: screenWidth *
-                                      0.02, // Reducir el tamaño del texto
-                                ),
-                              ),
-                          ],
-                        ),
-                      ),
                     ),
-                    AnimatedPositioned(
-                      duration: const Duration(milliseconds: 300),
-                      right: isHovered ? 10 : -50,
-                      child: AnimatedOpacity(
+                    boxShadow: isHovered
+                        ? [
+                            BoxShadow(
+                              color: (project['shadowColor'] as Color)
+                                      .withOpacity(0.3) ??
+                                  Colors.transparent,
+                              blurRadius: 10,
+                              offset: const Offset(0, 4),
+                            )
+                          ]
+                        : [],
+                  ),
+                  child: Stack(
+                    children: [
+                      AnimatedOpacity(
                         duration: const Duration(milliseconds: 300),
-                        opacity: isHovered ? 1.0 : 0.0,
+                        opacity: isHovered ? 1.0 : 0.7,
                         child: Container(
-                          padding: const EdgeInsets.all(8.0),
-                          decoration: BoxDecoration(
-                            color: Colors.black.withOpacity(0.5),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: const Icon(
-                            Icons.arrow_forward_ios,
-                            color: Colors.purpleAccent,
-                            size: 30,
+                          alignment: project['title'] == 'Coming Soon'
+                              ? Alignment.center
+                              : Alignment.centerLeft,
+                          padding: EdgeInsets.symmetric(
+                              horizontal: screenWidth * 0.02),
+                          child: Column(
+                            crossAxisAlignment:
+                                project['title'] == 'Coming Soon'
+                                    ? CrossAxisAlignment.center
+                                    : CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                project['title'].toString(),
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: screenWidth *
+                                      0.03, // Reducir el tamaño del texto
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                textAlign: project['title'] == 'Coming Soon'
+                                    ? TextAlign.center
+                                    : TextAlign.left,
+                              ),
+                              if (project['description'].toString().isNotEmpty)
+                                const SizedBox(height: 10),
+                              if (project['description'].toString().isNotEmpty)
+                                Text(
+                                  project['description'].toString(),
+                                  style: TextStyle(
+                                    color: Colors.white70,
+                                    fontSize: screenWidth *
+                                        0.025, // Reducir el tamaño del texto
+                                  ),
+                                ),
+                              if (project['date'].toString().isNotEmpty)
+                                const SizedBox(height: 10),
+                              if (project['date'].toString().isNotEmpty)
+                                Text(
+                                  project['date'].toString(),
+                                  style: TextStyle(
+                                    color: Colors.white54,
+                                    fontSize: screenWidth *
+                                        0.02, // Reducir el tamaño del texto
+                                  ),
+                                ),
+                            ],
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                      AnimatedPositioned(
+                        duration: const Duration(milliseconds: 300),
+                        right: isHovered ? 10 : -50,
+                        child: AnimatedOpacity(
+                          duration: const Duration(milliseconds: 300),
+                          opacity: isHovered ? 1.0 : 0.0,
+                          child: Container(
+                            padding: const EdgeInsets.all(8.0),
+                            decoration: BoxDecoration(
+                              color: Colors.black.withOpacity(0.5),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: const Icon(
+                              Icons.arrow_forward_ios,
+                              color: Colors.purpleAccent,
+                              size: 30,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             );
