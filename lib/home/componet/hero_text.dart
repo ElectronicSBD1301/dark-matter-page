@@ -141,16 +141,28 @@ class Button extends StatefulWidget {
 class _ButtonState extends State<Button> {
   bool _isHoveringContact = false;
   bool _isHoveringServices = false;
+  String _contactText = '';
+  String _servicesText = '';
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final localizedStrings = AppLocalizations.of(context);
+
+    // 🔹 Aseguramos que los textos se actualicen dinámicamente
+    setState(() {
+      _contactText = localizedStrings.translate('contact_us');
+      _servicesText = localizedStrings.translate('services');
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    final localizedStrings = AppLocalizations.of(context);
-
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
         _buildAnimatedButton(
-          text: localizedStrings.translate('contact_us'),
+          text: _contactText,
           isHovering: _isHoveringContact,
           onEnter: () => setState(() => _isHoveringContact = true),
           onExit: () => setState(() => _isHoveringContact = false),
@@ -162,7 +174,7 @@ class _ButtonState extends State<Button> {
         ),
         const SizedBox(width: 16),
         _buildAnimatedButton(
-          text: localizedStrings.translate('services'),
+          text: _servicesText,
           isHovering: _isHoveringServices,
           onEnter: () => setState(() => _isHoveringServices = true),
           onExit: () => setState(() => _isHoveringServices = false),
@@ -249,8 +261,7 @@ class _ButtonState extends State<Button> {
 }
 
 // ---------------------- SECCIÓN "ABOUT" ----------------------
-
-class About extends StatelessWidget {
+class About extends StatefulWidget {
   final double fontSize;
 
   const About({
@@ -259,9 +270,25 @@ class About extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  _AboutState createState() => _AboutState();
+}
+
+class _AboutState extends State<About> {
+  String _aboutText = '';
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     final localizedStrings = AppLocalizations.of(context);
 
+    // 🔹 Aseguramos que los textos se actualicen dinámicamente
+    setState(() {
+      _aboutText = localizedStrings.translate('transform_ideas');
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Stack(
       children: [
         // Filtro de desenfoque detrás del texto
@@ -277,10 +304,11 @@ class About extends StatelessWidget {
         WidgetAnimator(
           atRestEffect: WidgetRestingEffects.bounce(),
           child: AutoSizeText(
-            localizedStrings.translate('transform_ideas'),
+            key: ValueKey(_aboutText), // 🔹 Forzamos reconstrucción
+            _aboutText,
             style: TextStyle(
               color: Colors.white70,
-              fontSize: fontSize,
+              fontSize: widget.fontSize,
               height: 1.2,
               shadows: [
                 Shadow(
@@ -300,7 +328,7 @@ class About extends StatelessWidget {
 }
 
 // ---------------------- SECCIÓN "TITLE" ----------------------
-class TitleDark extends StatelessWidget {
+class TitleDark extends StatefulWidget {
   final double fontSize;
 
   const TitleDark({
@@ -309,45 +337,61 @@ class TitleDark extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return Consumer<LanguageProvider>(
-      builder: (context, languageProvider, child) {
-        final localizedStrings = AppLocalizations.of(context);
+  _TitleDarkState createState() => _TitleDarkState();
+}
 
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            WidgetAnimator(
-              atRestEffect: WidgetRestingEffects.bounce(),
-              child: TextAnimator(
-                localizedStrings.translate('transforming'),
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: fontSize,
-                  fontWeight: FontWeight.w900,
-                  fontFamily: 'Santana',
-                ),
-                spaceDelay: const Duration(seconds: 15),
-                incomingEffect: WidgetTransitionEffects.incomingScaleUp(),
-              ),
+class _TitleDarkState extends State<TitleDark> {
+  String _title = '';
+  String _subtitle = '';
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final localizedStrings = AppLocalizations.of(context);
+
+    // 🔹 Aseguramos que los textos se actualicen dinámicamente
+    setState(() {
+      _title = localizedStrings.translate('transforming');
+      _subtitle = localizedStrings.translate('ideas_into_digital_reality');
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        WidgetAnimator(
+          atRestEffect: WidgetRestingEffects.bounce(),
+          child: TextAnimator(
+            key: ValueKey(_title), // 🔹 Forzamos reconstrucción
+            _title,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: widget.fontSize,
+              fontWeight: FontWeight.w900,
+              fontFamily: 'Santana',
             ),
-            const SizedBox(height: 10),
-            WidgetAnimator(
-              atRestEffect: WidgetRestingEffects.bounce(),
-              child: TextAnimator(
-                localizedStrings.translate('ideas_into_digital_reality'),
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: fontSize * 0.9,
-                  fontWeight: FontWeight.w900,
-                  fontFamily: 'Santana',
-                ),
-                incomingEffect: WidgetTransitionEffects.incomingScaleUp(),
-              ),
+            spaceDelay: const Duration(seconds: 15),
+            incomingEffect: WidgetTransitionEffects.incomingScaleUp(),
+          ),
+        ),
+        const SizedBox(height: 10),
+        WidgetAnimator(
+          atRestEffect: WidgetRestingEffects.bounce(),
+          child: TextAnimator(
+            key: ValueKey(_subtitle), // 🔹 Forzamos reconstrucción
+            _subtitle,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: widget.fontSize * 0.9,
+              fontWeight: FontWeight.w900,
+              fontFamily: 'Santana',
             ),
-          ],
-        );
-      },
+            incomingEffect: WidgetTransitionEffects.incomingScaleUp(),
+          ),
+        ),
+      ],
     );
   }
 }

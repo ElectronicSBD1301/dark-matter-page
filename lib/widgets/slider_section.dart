@@ -3,6 +3,8 @@ import 'package:dark_matter_page/lenguaje/localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:video_player/video_player.dart';
+import 'package:provider/provider.dart';
+import 'package:dark_matter_page/language_provider.dart';
 
 class SliderSection extends StatefulWidget {
   const SliderSection({Key? key}) : super(key: key);
@@ -16,7 +18,6 @@ class _SliderSectionState extends State<SliderSection> {
   static const int kVirtualItemCount = 9999;
   static const int kInitialPage = 5001; // 5001 % 3 = 1 => Slide 'video'
   late final PageController _pageController;
-  // ✅ Definir `slides` como una variable de la clase
   late List<Map<String, String>> slides = [];
   bool _isSlidesInitialized = false; // Flag para verificar inicialización
 
@@ -28,6 +29,7 @@ class _SliderSectionState extends State<SliderSection> {
   bool _videoInitialized = false;
 
   Timer? _autoSlideTimer;
+
   @override
   void initState() {
     super.initState();
@@ -121,82 +123,136 @@ class _SliderSectionState extends State<SliderSection> {
 
   @override
   Widget build(BuildContext context) {
-    if (!_isSlidesInitialized) {
-      return const Center(child: CircularProgressIndicator());
-    }
-    final localizedStrings =
-        AppLocalizations.of(context)!; // 🔹 Obtiene las traducciones
+    return Consumer<LanguageProvider>(
+      builder: (context, languageProvider, child) {
+        if (!_isSlidesInitialized) {
+          return const Center(child: CircularProgressIndicator());
+        }
 
-    bool isVertical =
-        MediaQuery.of(context).size.height > MediaQuery.of(context).size.width;
+        final localizedStrings = AppLocalizations.of(context);
+        // Actualizar slides cuando cambia el idioma
+        slides = [
+          {
+            'title': localizedStrings.translate("slide_innovation_title"),
+            'description':
+                localizedStrings.translate("slide_innovation_description"),
+            'type': 'text',
+            'image': 'assets/images/innovation.jpg',
+          },
+          {
+            'title': localizedStrings.translate("slide_software_title"),
+            'description':
+                localizedStrings.translate("slide_software_description"),
+            'type': 'video',
+            'videoAsset': 'assets/images/software_development.mp4',
+          },
+          {
+            'title': localizedStrings.translate("slide_consulting_title"),
+            'description':
+                localizedStrings.translate("slide_consulting_description"),
+            'type': 'text',
+            'image': 'assets/images/it_consulting.jpg',
+          },
+          {
+            'title': localizedStrings.translate("slide_integration_title"),
+            'description':
+                localizedStrings.translate("slide_integration_description"),
+            'type': 'text',
+            'image': 'assets/images/hardware_software.jpg',
+          },
+          {
+            'title': localizedStrings.translate("slide_cybersecurity_title"),
+            'description':
+                localizedStrings.translate("slide_cybersecurity_description"),
+            'type': 'video',
+            'videoAsset': 'assets/images/cybersecurity.mp4',
+          },
+          {
+            'title': localizedStrings.translate("slide_ai_title"),
+            'description': localizedStrings.translate("slide_ai_description"),
+            'type': 'video',
+            'videoAsset': 'assets/images/ai_automation.mp4',
+          },
+          {
+            'title': localizedStrings.translate("slide_experience_title"),
+            'description':
+                localizedStrings.translate("slide_experience_description"),
+            'type': 'text',
+            'image': 'assets/images/experience.jpg',
+          },
+        ];
 
-    return Container(
-      // Fondo oscuro + Título
-      width: double.infinity,
-      color: Colors.transparent,
-      child: Column(
-        children: [
-          Text(
-            localizedStrings.translate('why_choose_us'),
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 34,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 8),
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.8,
-            child: Stack(
-              children: [
-                isVertical
-                    ? Column(
-                        children: [
-                          // === DERECHA: Video o Imagen, según slide actual ===
-                          viewright(context, isVertical, slides),
-                          // === IZQUIERDA: PageView infinito (TEXTOS) ===
-                          viewleft(isVertical, slides),
-                        ],
-                      )
-                    : Row(
-                        children: [
-                          // === IZQUIERDA: PageView infinito (TEXTOS) ===
-                          viewleft(isVertical, slides),
+        bool isVertical = MediaQuery.of(context).size.height >
+            MediaQuery.of(context).size.width;
 
-                          // === DERECHA: Video o Imagen, según slide actual ===
-                          viewright(context, isVertical, slides),
-                        ],
+        return Container(
+          width: double.infinity,
+          color: Colors.transparent,
+          child: Column(
+            children: [
+              Text(
+                localizedStrings.translate('why_choose_us'),
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 34,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 8),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.8,
+                child: Stack(
+                  children: [
+                    isVertical
+                        ? Column(
+                            children: [
+                              // === DERECHA: Video o Imagen, según slide actual ===
+                              viewright(context, isVertical, slides),
+                              // === IZQUIERDA: PageView infinito (TEXTOS) ===
+                              viewleft(isVertical, slides),
+                            ],
+                          )
+                        : Row(
+                            children: [
+                              // === IZQUIERDA: PageView infinito (TEXTOS) ===
+                              viewleft(isVertical, slides),
+
+                              // === DERECHA: Video o Imagen, según slide actual ===
+                              viewright(context, isVertical, slides),
+                            ],
+                          ),
+
+                    // FLECHA “anterior”
+                    Positioned(
+                      left: 10,
+                      top: 0,
+                      bottom: 0,
+                      child: IconButton(
+                        icon: const Icon(Icons.arrow_back_ios,
+                            color: Colors.white, size: 30),
+                        onPressed: () => _goToPreviousPage(autoPlay: false),
                       ),
+                    ),
 
-                // FLECHA “anterior”
-                Positioned(
-                  left: 10,
-                  top: 0,
-                  bottom: 0,
-                  child: IconButton(
-                    icon: const Icon(Icons.arrow_back_ios,
-                        color: Colors.white, size: 30),
-                    onPressed: () => _goToPreviousPage(autoPlay: false),
-                  ),
+                    // FLECHA “siguiente”
+                    Positioned(
+                      right: 10,
+                      top: 0,
+                      bottom: 0,
+                      child: IconButton(
+                        icon: const Icon(Icons.arrow_forward_ios,
+                            color: Colors.white, size: 30),
+                        onPressed: () => _goToNextPage(autoPlay: false),
+                      ),
+                    ),
+                  ],
                 ),
-
-                // FLECHA “siguiente”
-                Positioned(
-                  right: 10,
-                  top: 0,
-                  bottom: 0,
-                  child: IconButton(
-                    icon: const Icon(Icons.arrow_forward_ios,
-                        color: Colors.white, size: 30),
-                    onPressed: () => _goToNextPage(autoPlay: false),
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 
@@ -246,7 +302,6 @@ class _SliderSectionState extends State<SliderSection> {
     _startAutoSlideTimer();
 
     final slide = slides[realIndex];
-    // print('onPageChanged -> $realIndex, type= ${slide['type']}');
 
     // 1) Dispose del video anterior (si existía)
     _disposeCurrentVideoController();
