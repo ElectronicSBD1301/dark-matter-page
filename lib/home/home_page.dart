@@ -112,7 +112,7 @@ class _HomePageState extends State<HomePage> {
             children: [
               SizedBox(
                 key: homekey,
-                height: MediaQuery.of(context).size.height,
+                //height: MediaQuery.of(context).size.height,
                 width: double.infinity,
                 child: HeroContent(
                   onTapServices: () => _scrollToSection(servicesKey),

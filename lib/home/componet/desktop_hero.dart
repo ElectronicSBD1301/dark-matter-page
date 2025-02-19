@@ -92,27 +92,25 @@ class _DesktopHeroState extends State<DesktopHero> with WidgetsBindingObserver {
           ),
         // Contenido principal
         Center(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                  vertical: 20.0, horizontal: mediaQuery.width * 0.07),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const SizedBox(height: 75.0),
-                  Center(
-                    child: HeroText(
-                        mediaQuery: mediaQuery,
-                        onTapServices: widget.onTapServices),
-                  ),
-                  // Sección "tecno()" bien posicionada
-                  Padding(
-                    padding: const EdgeInsets.only(top: 40),
-                    child: tecno(localizedStrings),
-                  ),
-                ],
-              ),
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+                vertical: 20.0, horizontal: mediaQuery.width * 0.07),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const SizedBox(height: 75.0),
+                Center(
+                  child: HeroText(
+                      mediaQuery: mediaQuery,
+                      onTapServices: widget.onTapServices),
+                ),
+                // Sección "tecno()" bien posicionada
+                Padding(
+                  padding: const EdgeInsets.only(top: 40),
+                  child: tecno(localizedStrings),
+                ),
+              ],
             ),
           ),
         ),

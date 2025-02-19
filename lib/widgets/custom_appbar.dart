@@ -92,12 +92,22 @@ class _CustomAppBarState extends State<CustomAppBar> {
         },
         itemBuilder: (BuildContext context) {
           return [
-            _buildPopupMenuItem(localizedStrings.translate('home')),
-            _buildPopupMenuItem(localizedStrings.translate('about')),
-            _buildPopupMenuItem(localizedStrings.translate('services')),
-            _buildPopupMenuItem(localizedStrings.translate('projects')),
-            _buildPopupMenuItem(localizedStrings.translate('contact')),
-            _buildPopupMenuItem(localizedStrings.translate('language')),
+            _buildPopupMenuItem(
+                localizedStrings.translate('home'), widget.onTaphome),
+            _buildPopupMenuItem(
+                localizedStrings.translate('about'), widget.onTapAbout),
+            _buildPopupMenuItem(
+                localizedStrings.translate('services'), widget.onTapServices),
+            _buildPopupMenuItem(
+                localizedStrings.translate('projects'), widget.onTapProjects),
+            _buildPopupMenuItem(
+                localizedStrings.translate('contact'), widget.onTapContact),
+            _buildPopupMenuItem(
+              localizedStrings.translate('language'),
+              () {
+                _showLanguageDialog();
+              },
+            ),
           ];
         },
       ),
@@ -126,9 +136,10 @@ class _CustomAppBarState extends State<CustomAppBar> {
     ];
   }
 
-  PopupMenuItem<String> _buildPopupMenuItem(String text) {
+  PopupMenuItem<String> _buildPopupMenuItem(String text, VoidCallback ontap) {
     return PopupMenuItem<String>(
       value: text,
+      onTap: ontap,
       child: Text(text, style: const TextStyle(fontSize: 16)),
     );
   }
