@@ -1,6 +1,4 @@
 import 'package:dark_matter_page/home/componet/desktop_hero.dart';
-import 'package:dark_matter_page/home/componet/mobile_hero.dart';
-import 'package:dark_matter_page/home/componet/tablet_hero.dart';
 import 'package:flutter/material.dart';
 
 class HeroContent extends StatelessWidget {
@@ -18,12 +16,6 @@ class HeroContent extends StatelessWidget {
           // <- Cambiar por MobileHero o TabletHero
           onTapServices: onTapServices,
         );
-        /* if (constraints.maxWidth >= 850) {
-         
-        } else if (constraints.maxWidth >= 600) {
-          return const TabletHero();
-        }
-        return const MobileHero();*/
       }),
     );
   }

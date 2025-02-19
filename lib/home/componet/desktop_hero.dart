@@ -1,6 +1,7 @@
 import 'package:dark_matter_page/home/componet/hero_text.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
+import 'package:dark_matter_page/lenguaje/localization.dart';
 
 class DesktopHero extends StatefulWidget {
   final VoidCallback onTapServices;
@@ -62,6 +63,8 @@ class _DesktopHeroState extends State<DesktopHero> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context).size;
+    final localizedStrings = AppLocalizations.of(context);
+
     return Stack(
       children: [
         // Video de fondo
@@ -106,7 +109,7 @@ class _DesktopHeroState extends State<DesktopHero> with WidgetsBindingObserver {
                   // Sección "tecno()" bien posicionada
                   Padding(
                     padding: const EdgeInsets.only(top: 40),
-                    child: tecno(),
+                    child: tecno(localizedStrings),
                   ),
                 ],
               ),
@@ -118,7 +121,7 @@ class _DesktopHeroState extends State<DesktopHero> with WidgetsBindingObserver {
   }
 }
 
-Widget tecno() {
+Widget tecno(AppLocalizations localizedStrings) {
   return LayoutBuilder(
     builder: (context, constraints) {
       final double width = constraints.maxWidth;
@@ -161,8 +164,7 @@ Widget tecno() {
             Container(
               color: Color.fromARGB(83, 0, 0, 0),
               child: Text(
-                'Conectamos empresas con soluciones tecnológicas innovadoras '
-                'para impulsar su éxito global.',
+                localizedStrings.translate('connect_companies'),
                 style: TextStyle(
                   color: Colors.blue,
                   fontSize: fontSize,

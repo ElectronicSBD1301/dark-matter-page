@@ -1,5 +1,8 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../language_provider.dart';
+import '../lenguaje/localization.dart';
 
 class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
   final VoidCallback onTaphome;
@@ -25,120 +28,43 @@ class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
 }
 
 class _CustomAppBarState extends State<CustomAppBar> {
-  double _backgroundOpacity = 0.0;
-  double _textOpacity = 1.0;
-  double _lastOffset = 0;
-  bool _isScrollingDown = false;
   String? _hoveredButton; // Almacena el botón que tiene el mouse encima
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  void _onScroll(double offset) {
-    setState(() {
-      if (offset > _lastOffset && offset > 100) {
-        _isScrollingDown = true;
-      } else if (offset < _lastOffset) {
-        _isScrollingDown = false;
-      }
-
-      double normalizedOpacity = (1 - (offset / 300)).clamp(0.2, 1.0);
-
-      _backgroundOpacity = normalizedOpacity * 0.2;
-      _textOpacity = normalizedOpacity * 0.8;
-
-      if (offset <= 0) {
-        _backgroundOpacity = 0.0;
-        _textOpacity = 1.0;
-      }
-
-      _lastOffset = offset;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
+    final languageProvider = Provider.of<LanguageProvider>(context);
+    final localizedStrings = AppLocalizations.of(context);
 
-    return NotificationListener<ScrollUpdateNotification>(
-      onNotification: (notification) {
-        _onScroll(notification.metrics.pixels);
-        return true;
-      },
-      child: MouseRegion(
-        onEnter: (_) {
-          setState(() {
-            _backgroundOpacity = 0.6;
-            _textOpacity = 1.0;
-          });
-        },
-        onExit: (_) {
-          setState(() {
-            _backgroundOpacity = _isScrollingDown ? 0.2 : 0.4;
-            _textOpacity = _isScrollingDown ? 0.5 : 0.8;
-          });
-        },
-        child: AnimatedOpacity(
-          duration: const Duration(milliseconds: 300),
-          opacity: _textOpacity,
-          child: ClipRRect(
-            child: BackdropFilter(
-              filter: ImageFilter.blur(
-                sigmaX: _backgroundOpacity * 10,
-                sigmaY: _backgroundOpacity * 10,
-              ),
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 300),
-                decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(_backgroundOpacity),
-                  border: Border(
-                    bottom: BorderSide(
-                      color: Colors.white.withOpacity(0.1),
-                      width: 0.5,
-                    ),
-                  ),
-                ),
-                child: AppBar(
-                  backgroundColor: Colors.transparent,
-                  elevation: 0,
-                  title: Row(
-                    children: [
-                      Image.asset(
-                        'assets/images/logo.png',
-                        width: 40,
-                        height: 40,
-                        fit: BoxFit.contain,
-                      ),
-                      const SizedBox(width: 8),
-                      AnimatedOpacity(
-                        duration: const Duration(milliseconds: 300),
-                        opacity: _textOpacity,
-                        child: const Text(
-                          'Dark Matter',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  actions: screenWidth < 633
-                      ? _buildPopupMenu()
-                      : _buildDesktopMenu(),
-                ),
-              ),
+    return AppBar(
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      title: Row(
+        children: [
+          Image.asset(
+            'assets/images/logo.png',
+            width: 40,
+            height: 40,
+            fit: BoxFit.contain,
+          ),
+          const SizedBox(width: 8),
+          const Text(
+            'Dark Matter',
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
             ),
           ),
-        ),
+        ],
       ),
+      actions: screenWidth < 1200
+          ? _buildPopupMenu(localizedStrings)
+          : _buildDesktopMenu(localizedStrings),
     );
   }
 
   /// Menú en modo **Popup** para dispositivos con `width < 1200px`
-  List<Widget> _buildPopupMenu() {
+  List<Widget> _buildPopupMenu(AppLocalizations localizedStrings) {
     return [
       PopupMenuButton<String>(
         icon: const Icon(Icons.menu, color: Colors.white),
@@ -159,15 +85,19 @@ class _CustomAppBarState extends State<CustomAppBar> {
             case 'Contactos':
               widget.onTapContact();
               break;
+            case 'Idioma':
+              _showLanguageDialog();
+              break;
           }
         },
         itemBuilder: (BuildContext context) {
           return [
-            _buildPopupMenuItem('Home'),
-            _buildPopupMenuItem('Nosotros'),
-            _buildPopupMenuItem('Servicios'),
-            _buildPopupMenuItem('Proyectos'),
-            _buildPopupMenuItem('Contactos'),
+            _buildPopupMenuItem(localizedStrings.translate('home')),
+            _buildPopupMenuItem(localizedStrings.translate('about')),
+            _buildPopupMenuItem(localizedStrings.translate('services')),
+            _buildPopupMenuItem(localizedStrings.translate('projects')),
+            _buildPopupMenuItem(localizedStrings.translate('contact')),
+            _buildPopupMenuItem(localizedStrings.translate('language')),
           ];
         },
       ),
@@ -175,13 +105,24 @@ class _CustomAppBarState extends State<CustomAppBar> {
   }
 
   /// Menú en **modo Desktop** para dispositivos con `width >= 1200px`
-  List<Widget> _buildDesktopMenu() {
+  List<Widget> _buildDesktopMenu(AppLocalizations localizedStrings) {
     return [
-      _buildAnimatedButton('Home', widget.onTaphome),
-      _buildAnimatedButton('Nosotros', widget.onTapAbout),
-      _buildAnimatedButton('Servicios', widget.onTapServices),
-      _buildAnimatedButton('Proyectos', widget.onTapProjects),
-      _buildAnimatedButton('Contactos', widget.onTapContact),
+      _buildAnimatedButton(
+          localizedStrings.translate('home'), widget.onTaphome),
+      _buildAnimatedButton(
+          localizedStrings.translate('about'), widget.onTapAbout),
+      _buildAnimatedButton(
+          localizedStrings.translate('services'), widget.onTapServices),
+      _buildAnimatedButton(
+          localizedStrings.translate('projects'), widget.onTapProjects),
+      _buildAnimatedButton(
+          localizedStrings.translate('contact'), widget.onTapContact),
+      IconButton(
+        icon: const Icon(Icons.language, color: Colors.white),
+        onPressed: () {
+          _showLanguageDialog();
+        },
+      ),
     ];
   }
 
@@ -228,6 +169,64 @@ class _CustomAppBarState extends State<CustomAppBar> {
           ),
         ),
       ),
+    );
+  }
+
+  void _showLanguageDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        final localizedStrings = AppLocalizations.of(context);
+        return AlertDialog(
+          backgroundColor: Colors.black87,
+          title: Text(
+            localizedStrings.translate('language'),
+            style: const TextStyle(color: Colors.white),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                title: const Text(
+                  'English',
+                  style: TextStyle(color: Colors.white),
+                ),
+                onTap: () {
+                  Provider.of<LanguageProvider>(context, listen: false)
+                      .changeLanguage('en');
+                  Navigator.of(context).pop();
+                },
+                tileColor: Provider.of<LanguageProvider>(context)
+                            .currentLocale
+                            .languageCode ==
+                        'en'
+                    ? Colors.purpleAccent.withOpacity(0.2)
+                    : null,
+              ),
+              ListTile(
+                title: const Text(
+                  'Español',
+                  style: TextStyle(color: Colors.white),
+                ),
+                onTap: () {
+                  Provider.of<LanguageProvider>(context, listen: false)
+                      .changeLanguage('es');
+                  Navigator.of(context).pop();
+                },
+                tileColor: Provider.of<LanguageProvider>(context)
+                            .currentLocale
+                            .languageCode ==
+                        'es'
+                    ? Colors.purpleAccent.withOpacity(0.2)
+                    : null,
+              ),
+            ],
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
+        );
+      },
     );
   }
 }

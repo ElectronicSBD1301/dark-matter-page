@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:dark_matter_page/lenguaje/localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:video_player/video_player.dart';
@@ -15,6 +16,9 @@ class _SliderSectionState extends State<SliderSection> {
   static const int kVirtualItemCount = 9999;
   static const int kInitialPage = 5001; // 5001 % 3 = 1 => Slide 'video'
   late final PageController _pageController;
+  // ✅ Definir `slides` como una variable de la clase
+  late List<Map<String, String>> slides = [];
+  bool _isSlidesInitialized = false; // Flag para verificar inicialización
 
   int _virtualPage = kInitialPage;
   int _currentRealIndex = 0;
@@ -24,71 +28,6 @@ class _SliderSectionState extends State<SliderSection> {
   bool _videoInitialized = false;
 
   Timer? _autoSlideTimer;
-
-  // Slides reales. Cada slide de tipo 'video' podría tener su propia 'videoAsset'.
-  // Slides reales con descripciones mejoradas y archivos multimedia organizados.
-  final List<Map<String, String>> _slides = [
-    {
-      'title': 'Innovación',
-      'description': 'En Dark Matter Code, la innovación es nuestro motor principal. '
-          'Nos dedicamos a crear soluciones tecnológicas avanzadas que transforman negocios. '
-          'Desde inteligencia artificial hasta automatización, aplicamos tecnología de vanguardia '
-          'para garantizar que tu empresa esté siempre un paso adelante.',
-      'type': 'text',
-      'image': 'assets/images/innovation.jpg',
-    },
-    {
-      'title': 'Desarrollo de Software',
-      'description':
-          'Diseñamos y desarrollamos software a la medida, adaptándonos a las necesidades '
-              'de cada cliente. Nuestro equipo crea aplicaciones web y móviles eficientes, seguras y escalables, '
-              'optimizando procesos para maximizar la productividad.',
-      'type': 'video',
-      'videoAsset': 'assets/images/software_development.mp4',
-    },
-    {
-      'title': 'Consultoría en TI',
-      'description':
-          'Brindamos asesoría estratégica en tecnología para empresas que buscan optimizar sus sistemas y procesos. '
-              'Desde análisis de datos hasta migraciones a la nube, te guiamos en la transformación digital.',
-      'type': 'text',
-      'image': 'assets/images/it_consulting.jpg',
-    },
-    {
-      'title': 'Integración de Hardware y Software',
-      'description':
-          'Desarrollamos soluciones integrales que combinan hardware y software para mejorar la eficiencia operativa. '
-              'Desde IoT hasta automatización industrial, conectamos dispositivos inteligentes con plataformas digitales.',
-      'type': 'text',
-      'image': 'assets/images/hardware_software.jpg',
-    },
-    {
-      'title': 'Ciberseguridad y Protección de Datos',
-      'description':
-          'Protegemos tu información con soluciones avanzadas de ciberseguridad. Implementamos cifrado, firewalls, '
-              'y monitoreo en tiempo real para garantizar la integridad de tus datos y prevenir amenazas digitales.',
-      'type': 'video',
-      'videoAsset': 'assets/images/cybersecurity.mp4',
-    },
-    {
-      'title': 'Automatización e Inteligencia Artificial',
-      'description':
-          'La inteligencia artificial está revolucionando la industria, y en Dark Matter Code '
-              'la utilizamos para optimizar procesos, reducir costos y mejorar la toma de decisiones '
-              'a través de modelos predictivos y automatización avanzada.',
-      'type': 'video',
-      'videoAsset': 'assets/images/ai_automation.mp4',
-    },
-    {
-      'title': 'Nuestra Experiencia en Acción',
-      'description':
-          'Descubre cómo nuestras soluciones tecnológicas han ayudado a empresas a innovar y crecer. '
-              'Mira algunos de nuestros proyectos en acción y conoce cómo trabajamos.',
-      'type': 'text',
-      'image': 'assets/images/experience.jpg',
-    },
-  ];
-
   @override
   void initState() {
     super.initState();
@@ -119,7 +58,75 @@ class _SliderSectionState extends State<SliderSection> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Evitar reinicialización si ya está configurado
+    if (_isSlidesInitialized) return;
+    final localizedStrings = AppLocalizations.of(context)!;
+    setState(() {
+      // Mueve la inicialización de slides aquí para evitar acceder a context en initState()
+      slides = [
+        {
+          'title': localizedStrings.translate("slide_innovation_title"),
+          'description':
+              localizedStrings.translate("slide_innovation_description"),
+          'type': 'text',
+          'image': 'assets/images/innovation.jpg',
+        },
+        {
+          'title': localizedStrings.translate("slide_software_title"),
+          'description':
+              localizedStrings.translate("slide_software_description"),
+          'type': 'video',
+          'videoAsset': 'assets/images/software_development.mp4',
+        },
+        {
+          'title': localizedStrings.translate("slide_consulting_title"),
+          'description':
+              localizedStrings.translate("slide_consulting_description"),
+          'type': 'text',
+          'image': 'assets/images/it_consulting.jpg',
+        },
+        {
+          'title': localizedStrings.translate("slide_integration_title"),
+          'description':
+              localizedStrings.translate("slide_integration_description"),
+          'type': 'text',
+          'image': 'assets/images/hardware_software.jpg',
+        },
+        {
+          'title': localizedStrings.translate("slide_cybersecurity_title"),
+          'description':
+              localizedStrings.translate("slide_cybersecurity_description"),
+          'type': 'video',
+          'videoAsset': 'assets/images/cybersecurity.mp4',
+        },
+        {
+          'title': localizedStrings.translate("slide_ai_title"),
+          'description': localizedStrings.translate("slide_ai_description"),
+          'type': 'video',
+          'videoAsset': 'assets/images/ai_automation.mp4',
+        },
+        {
+          'title': localizedStrings.translate("slide_experience_title"),
+          'description':
+              localizedStrings.translate("slide_experience_description"),
+          'type': 'text',
+          'image': 'assets/images/experience.jpg',
+        },
+      ];
+      _isSlidesInitialized = true;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    if (!_isSlidesInitialized) {
+      return const Center(child: CircularProgressIndicator());
+    }
+    final localizedStrings =
+        AppLocalizations.of(context)!; // 🔹 Obtiene las traducciones
+
     bool isVertical =
         MediaQuery.of(context).size.height > MediaQuery.of(context).size.width;
 
@@ -129,10 +136,10 @@ class _SliderSectionState extends State<SliderSection> {
       color: Colors.transparent,
       child: Column(
         children: [
-          const Text(
-            '¿Por qué somos los indicados para ti?',
+          Text(
+            localizedStrings.translate('why_choose_us'),
             textAlign: TextAlign.center,
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.white,
               fontSize: 34,
               fontWeight: FontWeight.bold,
@@ -147,18 +154,18 @@ class _SliderSectionState extends State<SliderSection> {
                     ? Column(
                         children: [
                           // === DERECHA: Video o Imagen, según slide actual ===
-                          viewright(context, isVertical),
+                          viewright(context, isVertical, slides),
                           // === IZQUIERDA: PageView infinito (TEXTOS) ===
-                          viewleft(isVertical),
+                          viewleft(isVertical, slides),
                         ],
                       )
                     : Row(
                         children: [
                           // === IZQUIERDA: PageView infinito (TEXTOS) ===
-                          viewleft(isVertical),
+                          viewleft(isVertical, slides),
 
                           // === DERECHA: Video o Imagen, según slide actual ===
-                          viewright(context, isVertical),
+                          viewright(context, isVertical, slides),
                         ],
                       ),
 
@@ -193,7 +200,8 @@ class _SliderSectionState extends State<SliderSection> {
     );
   }
 
-  Expanded viewright(BuildContext context, bool isVertical) {
+  Expanded viewright(
+      BuildContext context, bool isVertical, List<Map<String, String>> slides) {
     return Expanded(
       flex: 1,
       child: Container(
@@ -202,12 +210,12 @@ class _SliderSectionState extends State<SliderSection> {
           right: MediaQuery.of(context).size.width * .035,
           left: 10,
         ),
-        child: _buildRightSide(_slides[_currentRealIndex], isVertical),
+        child: _buildRightSide(slides[_currentRealIndex], isVertical),
       ),
     );
   }
 
-  Expanded viewleft(bool isVertical) {
+  Expanded viewleft(bool isVertical, List<Map<String, String>> slides) {
     return Expanded(
       flex: 1,
       child: PageView.builder(
@@ -215,8 +223,8 @@ class _SliderSectionState extends State<SliderSection> {
         itemCount: kVirtualItemCount,
         onPageChanged: _onPageChanged,
         itemBuilder: (context, index) {
-          final realIndex = index % _slides.length;
-          final slide = _slides[realIndex];
+          final realIndex = index % slides.length;
+          final slide = slides[realIndex];
           return _buildTextSide(
             title: slide['title'] ?? '',
             description: slide['description'] ?? '',
@@ -231,14 +239,14 @@ class _SliderSectionState extends State<SliderSection> {
   // ================
   void _onPageChanged(int index) {
     _virtualPage = index;
-    final realIndex = index % _slides.length;
+    final realIndex = index % slides.length;
     setState(() => _currentRealIndex = realIndex);
 
     // Reinicia timer si es swipe manual
     _startAutoSlideTimer();
 
-    final slide = _slides[realIndex];
-    print('onPageChanged -> $realIndex, type= ${slide['type']}');
+    final slide = slides[realIndex];
+    // print('onPageChanged -> $realIndex, type= ${slide['type']}');
 
     // 1) Dispose del video anterior (si existía)
     _disposeCurrentVideoController();

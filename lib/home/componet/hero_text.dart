@@ -1,9 +1,12 @@
 import 'dart:ui';
 
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:dark_matter_page/language_provider.dart';
 import 'package:dark_matter_page/widgets/forumlario.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:widget_and_text_animator/widget_and_text_animator.dart';
+import 'package:dark_matter_page/lenguaje/localization.dart';
 
 class HeroText extends StatefulWidget {
   final VoidCallback onTapServices;
@@ -77,6 +80,8 @@ class _HeroTextState extends State<HeroText> {
 
   @override
   Widget build(BuildContext context) {
+    final localizedStrings = AppLocalizations.of(context);
+
     return Center(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -139,11 +144,13 @@ class _ButtonState extends State<Button> {
 
   @override
   Widget build(BuildContext context) {
+    final localizedStrings = AppLocalizations.of(context);
+
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
         _buildAnimatedButton(
-          text: 'Contáctanos',
+          text: localizedStrings.translate('contact_us'),
           isHovering: _isHoveringContact,
           onEnter: () => setState(() => _isHoveringContact = true),
           onExit: () => setState(() => _isHoveringContact = false),
@@ -155,7 +162,7 @@ class _ButtonState extends State<Button> {
         ),
         const SizedBox(width: 16),
         _buildAnimatedButton(
-          text: 'Servicios',
+          text: localizedStrings.translate('services'),
           isHovering: _isHoveringServices,
           onEnter: () => setState(() => _isHoveringServices = true),
           onExit: () => setState(() => _isHoveringServices = false),
@@ -253,6 +260,8 @@ class About extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizedStrings = AppLocalizations.of(context);
+
     return Stack(
       children: [
         // Filtro de desenfoque detrás del texto
@@ -268,9 +277,7 @@ class About extends StatelessWidget {
         WidgetAnimator(
           atRestEffect: WidgetRestingEffects.bounce(),
           child: AutoSizeText(
-            'Transformamos tus ideas en software innovador y ágil,\n'
-            'utilizando las últimas tecnologías para crear soluciones\n'
-            'duraderas que evolucionan con tu negocio.',
+            localizedStrings.translate('transform_ideas'),
             style: TextStyle(
               color: Colors.white70,
               fontSize: fontSize,
@@ -303,38 +310,44 @@ class TitleDark extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        WidgetAnimator(
-          atRestEffect: WidgetRestingEffects.bounce(),
-          child: TextAnimator(
-            'Transformando',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: fontSize,
-              fontWeight: FontWeight.w900,
-              fontFamily: 'Santana',
+    return Consumer<LanguageProvider>(
+      builder: (context, languageProvider, child) {
+        final localizedStrings = AppLocalizations.of(context);
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            WidgetAnimator(
+              atRestEffect: WidgetRestingEffects.bounce(),
+              child: TextAnimator(
+                localizedStrings.translate('transforming'),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: fontSize,
+                  fontWeight: FontWeight.w900,
+                  fontFamily: 'Santana',
+                ),
+                spaceDelay: const Duration(seconds: 15),
+                incomingEffect: WidgetTransitionEffects.incomingScaleUp(),
+              ),
             ),
-            spaceDelay: Duration(seconds: 15),
-            incomingEffect: WidgetTransitionEffects.incomingScaleUp(),
-          ),
-        ),
-        const SizedBox(height: 10),
-        WidgetAnimator(
-          atRestEffect: WidgetRestingEffects.bounce(),
-          child: TextAnimator(
-            'ideas en realidad digital',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: fontSize * 0.9, // Ligera variación en el tamaño
-              fontWeight: FontWeight.w900,
-              fontFamily: 'Santana',
+            const SizedBox(height: 10),
+            WidgetAnimator(
+              atRestEffect: WidgetRestingEffects.bounce(),
+              child: TextAnimator(
+                localizedStrings.translate('ideas_into_digital_reality'),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: fontSize * 0.9,
+                  fontWeight: FontWeight.w900,
+                  fontFamily: 'Santana',
+                ),
+                incomingEffect: WidgetTransitionEffects.incomingScaleUp(),
+              ),
             ),
-            incomingEffect: WidgetTransitionEffects.incomingScaleUp(),
-          ),
-        ),
-      ],
+          ],
+        );
+      },
     );
   }
 }

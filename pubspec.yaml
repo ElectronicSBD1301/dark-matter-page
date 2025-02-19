@@ -30,11 +30,28 @@ dependencies:
   google_fonts: ^4.0.4
   url_launcher: ^6.3.1
   flutter_staggered_grid_view: ^0.7.0
+  mailer: ^6.4.1
+  flutter_launcher_icons: ^0.11.0  # Usa la última versión
+  flutter_localizations:
+    sdk: flutter
+  provider: ^6.1.2
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^4.0.0
+
+flutter_icons:
+  android: true
+  ios: true
+  web:
+    generate: true
+  windows:
+    generate: false
+  macos:
+    generate: false
+  
+  image_path: "assets/images/logob.png"  # Ruta de la imagen del nuevo ícono
 
 flutter:
   uses-material-design: true
@@ -53,6 +70,7 @@ flutter:
     - assets/images/instagram.png
     - assets/images/tiktok.png
     - assets/images/future_image.png
+    - assets/images/future.png
     - assets/images/project1.png
     - assets/images/project2.png
     - assets/images/project3.png
@@ -97,3 +115,11 @@ flutter:
     - assets/images/matter.png
     - assets/images/dark.png
     - assets/images/code.jpg
+    - assets/images/luna.png
+    - assets/images/l0.jpg
+    - assets/images/l1.jpg
+    - assets/images/l2.jpg
+    - assets/images/l3.jpg
+    - assets/images/l4.jpg
+    - lib/l10n/intl_en.json
+    - lib/l10n/intl_es.json

@@ -1,6 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-
+import 'package:mailer/mailer.dart';
+import 'package:mailer/smtp_server.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../lenguaje/localization.dart';
 
 class ContactForm extends StatefulWidget {
   const ContactForm({Key? key}) : super(key: key);
@@ -33,7 +36,7 @@ class _ContactFormState extends State<ContactForm> {
         Step(
           state: _activeStepIndex <= 0 ? StepState.editing : StepState.complete,
           isActive: _activeStepIndex >= 0,
-          title: const Text('Información básica del cliente'),
+          title: Text(AppLocalizations.of(context).translate('basic_info')),
           content: Form(
             key: _formKey,
             child: Column(
@@ -43,13 +46,15 @@ class _ContactFormState extends State<ContactForm> {
                   padding: const EdgeInsets.symmetric(vertical: 6.0),
                   child: TextFormField(
                     controller: nameController,
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       border: OutlineInputBorder(),
-                      labelText: 'Nombre Completo',
+                      labelText:
+                          AppLocalizations.of(context).translate('full_name'),
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Este campo es obligatorio';
+                        return AppLocalizations.of(context)
+                            .translate('required_field');
                       }
                       return null;
                     },
@@ -59,16 +64,19 @@ class _ContactFormState extends State<ContactForm> {
                   padding: const EdgeInsets.symmetric(vertical: 6.0),
                   child: TextFormField(
                     controller: emailController,
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       border: OutlineInputBorder(),
-                      labelText: 'Correo Electrónico',
+                      labelText:
+                          AppLocalizations.of(context).translate('email'),
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Este campo es obligatorio';
+                        return AppLocalizations.of(context)
+                            .translate('required_field');
                       }
                       if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
-                        return 'Ingrese un correo electrónico válido';
+                        return AppLocalizations.of(context)
+                            .translate('valid_email');
                       }
                       return null;
                     },
@@ -78,9 +86,10 @@ class _ContactFormState extends State<ContactForm> {
                   padding: const EdgeInsets.symmetric(vertical: 6.0),
                   child: TextFormField(
                     controller: phoneController,
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       border: OutlineInputBorder(),
-                      labelText: 'Teléfono (opcional)',
+                      labelText: AppLocalizations.of(context)
+                          .translate('phone_optional'),
                     ),
                   ),
                 ),
@@ -88,13 +97,15 @@ class _ContactFormState extends State<ContactForm> {
                   padding: const EdgeInsets.symmetric(vertical: 6.0),
                   child: TextFormField(
                     controller: companyController,
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       border: OutlineInputBorder(),
-                      labelText: 'Empresa u Organización',
+                      labelText:
+                          AppLocalizations.of(context).translate('company'),
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Este campo es obligatorio';
+                        return AppLocalizations.of(context)
+                            .translate('required_field');
                       }
                       return null;
                     },
@@ -107,23 +118,26 @@ class _ContactFormState extends State<ContactForm> {
         Step(
           state: _activeStepIndex <= 1 ? StepState.editing : StepState.complete,
           isActive: _activeStepIndex >= 1,
-          title: const Text('Detalles del proyecto'),
+          title:
+              Text(AppLocalizations.of(context).translate('project_details')),
           content: Column(
             children: [
               const SizedBox(height: 16),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 6.0),
                 child: DropdownButtonFormField<String>(
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Servicio de interés',
+                    labelText: AppLocalizations.of(context)
+                        .translate('service_interest'),
                   ),
                   items: [
-                    'Desarrollo de software',
-                    'Consultoría tecnológica',
-                    'Inteligencia artificial',
-                    'Aplicaciones móviles',
-                    'Otros'
+                    AppLocalizations.of(context)
+                        .translate('software_development'),
+                    AppLocalizations.of(context).translate('tech_consulting'),
+                    AppLocalizations.of(context).translate('ai'),
+                    AppLocalizations.of(context).translate('mobile_apps'),
+                    AppLocalizations.of(context).translate('others')
                   ].map((String category) {
                     return DropdownMenuItem(
                       value: category,
@@ -137,7 +151,8 @@ class _ContactFormState extends State<ContactForm> {
                   },
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Este campo es obligatorio';
+                      return AppLocalizations.of(context)
+                          .translate('required_field');
                     }
                     return null;
                   },
@@ -146,15 +161,16 @@ class _ContactFormState extends State<ContactForm> {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 6.0),
                 child: DropdownButtonFormField<String>(
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Tamaño de la empresa',
+                    labelText:
+                        AppLocalizations.of(context).translate('company_size'),
                   ),
                   items: [
-                    'Pequeña empresa',
-                    'Mediana empresa',
-                    'Gran empresa',
-                    'Emprendedor/Startup'
+                    AppLocalizations.of(context).translate('small_company'),
+                    AppLocalizations.of(context).translate('medium_company'),
+                    AppLocalizations.of(context).translate('large_company'),
+                    AppLocalizations.of(context).translate('startup')
                   ].map((String size) {
                     return DropdownMenuItem(
                       value: size,
@@ -168,7 +184,8 @@ class _ContactFormState extends State<ContactForm> {
                   },
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Este campo es obligatorio';
+                      return AppLocalizations.of(context)
+                          .translate('required_field');
                     }
                     return null;
                   },
@@ -177,15 +194,15 @@ class _ContactFormState extends State<ContactForm> {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 6.0),
                 child: DropdownButtonFormField<String>(
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Presupuesto aproximado',
+                    labelText: AppLocalizations.of(context).translate('budget'),
                   ),
                   items: [
-                    'Menos de 5,000',
-                    '5,000 - 10,000',
-                    '10,000 - 20,000',
-                    'Más de 20,000'
+                    AppLocalizations.of(context).translate('less_than_5000'),
+                    AppLocalizations.of(context).translate('5000_10000'),
+                    AppLocalizations.of(context).translate('10000_20000'),
+                    AppLocalizations.of(context).translate('more_than_20000')
                   ].map((String budget) {
                     return DropdownMenuItem(
                       value: budget,
@@ -199,7 +216,8 @@ class _ContactFormState extends State<ContactForm> {
                   },
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Este campo es obligatorio';
+                      return AppLocalizations.of(context)
+                          .translate('required_field');
                     }
                     return null;
                   },
@@ -209,9 +227,10 @@ class _ContactFormState extends State<ContactForm> {
                 padding: const EdgeInsets.symmetric(vertical: 6.0),
                 child: TextFormField(
                   controller: projectDeadlineController,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Plazo del proyecto',
+                    labelText: AppLocalizations.of(context)
+                        .translate('project_deadline'),
                   ),
                 ),
               ),
@@ -221,7 +240,8 @@ class _ContactFormState extends State<ContactForm> {
         Step(
           state: _activeStepIndex <= 2 ? StepState.editing : StepState.complete,
           isActive: _activeStepIndex >= 2,
-          title: const Text('Mensaje adicional'),
+          title: Text(
+              AppLocalizations.of(context).translate('additional_message')),
           content: Column(
             children: [
               const SizedBox(height: 16),
@@ -229,9 +249,10 @@ class _ContactFormState extends State<ContactForm> {
                 padding: const EdgeInsets.symmetric(vertical: 6.0),
                 child: TextFormField(
                   controller: additionalMessageController,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Mensaje o consulta',
+                    labelText:
+                        AppLocalizations.of(context).translate('message'),
                   ),
                   maxLines: 5,
                 ),
@@ -239,15 +260,16 @@ class _ContactFormState extends State<ContactForm> {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 6.0),
                 child: DropdownButtonFormField<String>(
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Cómo nos encontró',
+                    labelText: AppLocalizations.of(context)
+                        .translate('how_did_you_find_us'),
                   ),
                   items: [
-                    'Redes sociales',
-                    'Recomendación',
-                    'Búsqueda en Google',
-                    'Otros'
+                    AppLocalizations.of(context).translate('social_media'),
+                    AppLocalizations.of(context).translate('recommendation'),
+                    AppLocalizations.of(context).translate('google_search'),
+                    AppLocalizations.of(context).translate('others')
                   ].map((String source) {
                     return DropdownMenuItem(
                       value: source,
@@ -267,12 +289,14 @@ class _ContactFormState extends State<ContactForm> {
         Step(
           state: StepState.complete,
           isActive: _activeStepIndex >= 3,
-          title: const Text('Confirmación y política de privacidad'),
+          title: Text(AppLocalizations.of(context)
+              .translate('confirmation_privacy_policy')),
           content: Column(
             children: [
               const SizedBox(height: 16),
               CheckboxListTile(
-                title: const Text('Acepto la política de privacidad'),
+                title: Text(AppLocalizations.of(context)
+                    .translate('accept_privacy_policy')),
                 value: privacyPolicyAccepted,
                 onChanged: (value) {
                   setState(() {
@@ -289,18 +313,12 @@ class _ContactFormState extends State<ContactForm> {
                       onPressed: () {
                         if (_formKey.currentState!.validate() &&
                             privacyPolicyAccepted) {
-                          // Aquí puedes manejar el envío del formulario
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content:
-                                    Text('Formulario enviado correctamente')),
-                          );
-                          Navigator.of(context).pop(); // Cerrar el formulario
+                          saveFormDataAndSendEmail();
                         } else if (!privacyPolicyAccepted) {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content: Text(
-                                    'Debe aceptar la política de privacidad')),
+                            SnackBar(
+                                content: Text(AppLocalizations.of(context)
+                                    .translate('must_accept_privacy_policy'))),
                           );
                         }
                       },
@@ -310,7 +328,8 @@ class _ContactFormState extends State<ContactForm> {
                           borderRadius: BorderRadius.circular(10),
                         ),
                       ),
-                      child: const Text('Enviar'),
+                      child:
+                          Text(AppLocalizations.of(context).translate('send')),
                     ),
                   ),
                   const SizedBox(width: 10),
@@ -327,7 +346,8 @@ class _ContactFormState extends State<ContactForm> {
                           borderRadius: BorderRadius.circular(10),
                         ),
                       ),
-                      child: const Text('Atrás'),
+                      child:
+                          Text(AppLocalizations.of(context).translate('back')),
                     ),
                   ),
                 ],
@@ -336,6 +356,55 @@ class _ContactFormState extends State<ContactForm> {
           ),
         ),
       ];
+
+  void saveFormDataAndSendEmail() async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
+      },
+    );
+
+    try {
+      // 🔹 1. Guardar en Firestore
+      CollectionReference formCollection =
+          FirebaseFirestore.instance.collection('formularios');
+
+      await formCollection.add({
+        'nombre': nameController.text,
+        'email': emailController.text,
+        'telefono': phoneController.text,
+        'empresa': companyController.text,
+        'servicio': selectedService,
+        'tamaño_empresa': selectedCompanySize,
+        'presupuesto': selectedBudget,
+        'plazo': projectDeadlineController.text,
+        'mensaje': additionalMessageController.text,
+        'como_nos_encontro': foundUs,
+        'fecha': FieldValue.serverTimestamp(),
+      });
+
+      // 🔹 Mostrar confirmación
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+            content: Text(AppLocalizations.of(context)
+                .translate('form_sent_successfully'))),
+      );
+      Navigator.of(context).pop(); // Cerrar el diálogo de carga
+      Navigator.of(context).pop(); // Cerrar el formulario
+    } catch (e) {
+      Navigator.of(context).pop(); // Cerrar el diálogo de carga
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+            content:
+                Text('${AppLocalizations.of(context).translate('error')}: $e')),
+      );
+      print('Error: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -350,7 +419,7 @@ class _ContactFormState extends State<ContactForm> {
           ),
         ),
         title: Text(
-          'Formulario de Contacto',
+          AppLocalizations.of(context).translate('contact_form'),
           style: GoogleFonts.poppins(
             fontSize: 22,
             fontWeight: FontWeight.w600,
@@ -422,7 +491,7 @@ class _ContactFormState extends State<ContactForm> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
-                  child: const Text('Siguiente'),
+                  child: Text(AppLocalizations.of(context).translate('next')),
                 ),
               ),
               const SizedBox(width: 10),
@@ -436,7 +505,7 @@ class _ContactFormState extends State<ContactForm> {
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ),
-                    child: const Text('Atrás'),
+                    child: Text(AppLocalizations.of(context).translate('back')),
                   ),
                 ),
             ],

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:dark_matter_page/lenguaje/localization.dart';
 import 'package:dark_matter_page/widgets/view_project.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -47,84 +48,91 @@ class ProjectsSection extends StatefulWidget {
 }
 
 class _ProjectsSectionState extends State<ProjectsSection> {
+  late List<SlideData> baseSlides;
+
   // Lista base con sub-slides y slides normales
-  final List<SlideData> baseSlides = [
-    SlideData(
-        slideWidth: 280,
+  List<SlideData> _buildBaseSlides(BuildContext context) {
+    final localizedStrings = AppLocalizations.of(context);
+    return [
+      SlideData(
+          slideWidth: 280,
+          type: 'sub',
+          image: 'assets/images/matter.png',
+          title: localizedStrings.translate('dark_title'),
+          subtitle: localizedStrings.translate('dark_subtitle'),
+          imageOpacity: 0.3),
+      SlideData(
+        slideWidth: 350,
+        type: 'normal',
+        title: "Pickup Workshop",
+        description: localizedStrings.translate('pickup_corto'),
+        subtitle: localizedStrings.translate('pickup_sub'),
+        image: 'assets/images/pp0.png',
+        relatedImages: [
+          'assets/images/p00.png',
+          'assets/images/p1.jpg',
+          'assets/images/p2.jpg',
+          'assets/images/p3.jpg',
+          'assets/images/p4.jpg',
+          'assets/images/p5.jpg',
+          'assets/images/p6.jpg',
+        ],
+        imageOpacity: 0.1,
+      ),
+      SlideData(
+        slideWidth: 320,
         type: 'sub',
-        image: 'assets/images/matter.png',
-        title: 'DARK',
-        subtitle: 'Soluciones para todas las plataformas',
-        imageOpacity: 0.3),
-    SlideData(
-      slideWidth: 350,
-      type: 'normal',
-      title: "Pickup Workshop",
-      description: 'Descripción del proyecto',
-      subtitle: 'Subtítulo del proyecto',
-      image: 'assets/images/pp0.png',
-      relatedImages: [
-        'assets/images/p00.png',
-        'assets/images/p1.jpg',
-        'assets/images/p2.jpg',
-        'assets/images/p3.jpg',
-        'assets/images/p4.jpg',
-        'assets/images/p5.jpg',
-        'assets/images/p6.jpg',
-      ],
-      imageOpacity: 0.1,
-    ),
-    SlideData(
-      slideWidth: 320,
-      type: 'sub',
-      image: 'assets/images/dark.png',
-      title: 'MATTER',
-      subtitle: 'Rendimiento Optimo',
-      imageOpacity: 0.1,
-    ),
-    SlideData(
-      slideWidth: 200,
-      title: "Proyecto personalizado",
-      type: 'normal',
-      image: 'assets/images/project5.png',
-      relatedImages: [
-        'assets/images/project5.png',
-        'assets/images/project5.png',
-        'assets/images/project5.png',
-      ],
-      description: 'Descripción del proyecto',
-      subtitle: 'Subtítulo del proyecto',
-      imageOpacity: 0.1,
-    ),
-    SlideData(
-      slideWidth: 300,
-      type: 'sub',
-      image: 'assets/images/code.jpg',
-      title: 'Code',
-      subtitle: 'Eficiencia y Innovación',
-      imageOpacity: 0.3,
-    ),
-    SlideData(
-      slideWidth: 300,
-      title: "Proyecto de la comunidad",
-      subtitle: 'Subtítulo del proyecto',
-      description: 'Descripción del proyecto',
-      relatedImages: [
-        'assets/images/jade1.jpg',
-        'assets/images/jade2.jpg',
-        'assets/images/jade3.jpg',
-        'assets/images/jade4.jpg',
-        'assets/images/jade5.jpg',
-        'assets/images/jade6.jpg',
-        'assets/images/jade7.jpg',
-        'assets/images/jade8.jpg',
-        'assets/images/jade9.jpg',
-      ],
-      type: 'normal',
-      image: 'assets/images/jadep.png',
-      imageOpacity: 0.3,
-    ),
-  ];
+        image: 'assets/images/dark.png',
+        title: localizedStrings.translate('matter_title'),
+        subtitle: localizedStrings.translate('matter_subtitle'),
+        imageOpacity: 0.1,
+      ),
+      SlideData(
+        slideWidth: 250,
+        title: "Rodríguez Luna Import",
+        type: 'normal',
+        image: 'assets/images/luna.png',
+        relatedImages: [
+          'assets/images/l0.jpg',
+          'assets/images/l1.jpg',
+          'assets/images/l2.jpg',
+          'assets/images/l3.jpg',
+          'assets/images/l4.jpg',
+        ],
+        description: localizedStrings.translate('luna_corto'),
+        subtitle: localizedStrings.translate('luna_sub'),
+        imageOpacity: 0.3,
+      ),
+      SlideData(
+        slideWidth: 300,
+        type: 'sub',
+        image: 'assets/images/code.jpg',
+        title: localizedStrings.translate('code_title'),
+        subtitle: localizedStrings.translate('code_subtitle'),
+        imageOpacity: 0.3,
+      ),
+      SlideData(
+        slideWidth: 300,
+        title: "GRUPO JADE ROSARIO",
+        description: localizedStrings.translate('jade_corto'),
+        subtitle: localizedStrings.translate('jade_sub'),
+        relatedImages: [
+          'assets/images/jade1.jpg',
+          'assets/images/jade2.jpg',
+          'assets/images/jade3.jpg',
+          'assets/images/jade4.jpg',
+          'assets/images/jade5.jpg',
+          'assets/images/jade6.jpg',
+          'assets/images/jade7.jpg',
+          'assets/images/jade8.jpg',
+          'assets/images/jade9.jpg',
+        ],
+        type: 'normal',
+        image: 'assets/images/jadep.png',
+        imageOpacity: 0.3,
+      ),
+    ];
+  }
 
   // Ajustes del carrusel
   static const double carouselHeight = 400;
@@ -142,8 +150,15 @@ class _ProjectsSectionState extends State<ProjectsSection> {
   @override
   void initState() {
     super.initState();
-    _buildInfiniteSlides();
     _startContinuousScroll();
+  }
+
+  /// Se usa `didChangeDependencies` en vez de `initState`
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    baseSlides = _buildBaseSlides(context); // 🔹 Mover la inicialización aquí
+    _buildInfiniteSlides();
   }
 
   @override
@@ -249,8 +264,8 @@ class _ProjectsSectionState extends State<ProjectsSection> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const Text(
-              'Nuestros proyectos',
+            Text(
+              AppLocalizations.of(context).translate('our_projects'),
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 24,
@@ -292,8 +307,9 @@ class _ProjectsSectionState extends State<ProjectsSection> {
             // Footer
             Column(
               children: [
-                const Text(
-                  '¿Estás interesado en ver más proyectos?',
+                Text(
+                  AppLocalizations.of(context)
+                      .translate('interested_in_more_projects'),
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 18,
@@ -319,8 +335,8 @@ class _ProjectsSectionState extends State<ProjectsSection> {
                       vertical: 12,
                     ),
                   ),
-                  child: const Text(
-                    'VER TODOS',
+                  child: Text(
+                    AppLocalizations.of(context).translate('see_all'),
                     style: TextStyle(color: Colors.white, fontSize: 16),
                   ),
                 ),

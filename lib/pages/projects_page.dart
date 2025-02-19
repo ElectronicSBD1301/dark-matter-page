@@ -1,3 +1,4 @@
+import 'package:dark_matter_page/lenguaje/localization.dart';
 import 'package:dark_matter_page/widgets/custom_footer.dart';
 import 'package:dark_matter_page/widgets/project_slide.dart';
 import 'package:dark_matter_page/widgets/view_project.dart';
@@ -87,12 +88,14 @@ class _ProjectsPageState extends State<ProjectsPage> {
     final double screenWidth = MediaQuery.of(context).size.width;
     final double screenHeight = MediaQuery.of(context).size.height;
 
+    final localizedStrings = AppLocalizations.of(context);
     return Scaffold(
       extendBodyBehindAppBar: true,
       backgroundColor: Colors.black,
       body: Column(
         children: [
-          _buildHeaderSection(context, screenWidth, screenHeight),
+          _buildHeaderSection(
+              context, screenWidth, screenHeight, localizedStrings),
           Expanded(
             child: SingleChildScrollView(
               child: Container(
@@ -101,7 +104,7 @@ class _ProjectsPageState extends State<ProjectsPage> {
                     horizontal: screenWidth * 0.05, vertical: 20),
                 child: Column(
                   children: [
-                    _buildProjectsList(context, screenWidth),
+                    _buildProjectsList(context, screenWidth, localizedStrings),
                     const SizedBox(height: 20),
                     const CustomFooter(), // Hacer el footer más pequeño
                   ],
@@ -116,8 +119,8 @@ class _ProjectsPageState extends State<ProjectsPage> {
 
   //double headerHeight = 0.35; // Puedes ajustarlo o quitarlo si no quieres altura fija
 
-  Widget _buildHeaderSection(
-      BuildContext context, double screenWidth, double screenHeight) {
+  Widget _buildHeaderSection(BuildContext context, double screenWidth,
+      double screenHeight, AppLocalizations localizedStrings) {
     final bool isWideScreen = screenWidth / screenHeight > 1.6;
 
     return Container(
@@ -154,7 +157,7 @@ class _ProjectsPageState extends State<ProjectsPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'Proyectos Destacados',
+                        localizedStrings.translate("featured_projects"),
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: titleFontSize,
@@ -164,9 +167,10 @@ class _ProjectsPageState extends State<ProjectsPage> {
                       ),
                       const SizedBox(height: 10),
                       Text(
-                        'Hemos trabajado con empresas de diversos sectores,\n'
+                        localizedStrings.translate("description"),
+                        /* 'Hemos trabajado con empresas de diversos sectores,\n'
                         'creando soluciones digitales que impulsan su crecimiento.\n'
-                        'Estos son algunos de nuestros proyectos destacados.',
+                        'Estos son algunos de nuestros proyectos destacados.',*/
                         style: TextStyle(
                           color: Colors.white70,
                           fontSize: aboutFontSize,
@@ -185,7 +189,7 @@ class _ProjectsPageState extends State<ProjectsPage> {
                   _buildBackButton(context),
                   const SizedBox(height: 20),
                   Text(
-                    'Proyectos Destacados',
+                    localizedStrings.translate("featured_projects"),
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: titleFontSize,
@@ -195,9 +199,10 @@ class _ProjectsPageState extends State<ProjectsPage> {
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    'Hemos trabajado con empresas de diversos sectores,\n'
-                    'creando soluciones digitales que impulsan su crecimiento.\n'
-                    'Estos son algunos de nuestros proyectos destacados.',
+                    localizedStrings.translate("description"),
+                    /* 'Hemos trabajado con empresas de diversos sectores,\n'
+                        'creando soluciones digitales que impulsan su crecimiento.\n'
+                        'Estos son algunos de nuestros proyectos destacados.',*/
                     style: TextStyle(
                       color: Colors.white70,
                       fontSize: aboutFontSize,
@@ -239,13 +244,16 @@ class _ProjectsPageState extends State<ProjectsPage> {
     );
   }
 
-  Widget _buildProjectsList(BuildContext context, double screenWidth) {
+  Widget _buildProjectsList(BuildContext context, double screenWidth,
+      AppLocalizations localizedStrings) {
     final projects = [
       {
-        'image': 'assets/images/pp0.jpg',
+        'image': 'assets/images/pp0.png',
         'title': 'Pickup Workshop',
-        'description': 'Descripción breve del Proyecto 1',
-        'date': 'Enero 2022',
+        'subtitle': localizedStrings.translate("pickup_sub"),
+        'description': localizedStrings.translate("pickup_largo"),
+        'description_small': localizedStrings.translate("pickup_corto"),
+        'date': localizedStrings.translate("pickup_date"),
         'shadowColor': Colors.blueAccent,
         'relatedImages': [
           'assets/images/p0.png',
@@ -258,11 +266,13 @@ class _ProjectsPageState extends State<ProjectsPage> {
         ],
       },
       {
-        'image': 'assets/images/jade00.jpg',
-        'title': 'Proyecto 2',
-        'description': 'Descripción breve del Proyecto 2',
-        'date': 'Febrero 2025',
-        'shadowColor': Colors.purpleAccent,
+        'image': 'assets/images/jadep.png',
+        'title': 'GRUPO JADE ROSARIO',
+        'subtitle': localizedStrings.translate("jade_sub"),
+        'description': localizedStrings.translate("jade_largo"),
+        'description_small': localizedStrings.translate("jade_corto"),
+        'date': localizedStrings.translate("jade_date"),
+        'shadowColor': Colors.teal[900],
         'relatedImages': [
           "assets/images/jade0.jpg",
           "assets/images/jade00.jpg",
@@ -279,8 +289,26 @@ class _ProjectsPageState extends State<ProjectsPage> {
         ],
       },
       {
+        'image': 'assets/images/luna.png',
+        'title': 'Rodríguez Luna Import',
+        'subtitle': localizedStrings.translate("luna_sub"),
+        'description': localizedStrings.translate("luna_largo"),
+        'description_small': localizedStrings.translate("luna_corto"),
+        'date': localizedStrings.translate("luna_date"),
+        'shadowColor': Colors.white,
+        'relatedImages': [
+          'assets/images/luna.png',
+          'assets/images/l0.jpg',
+          'assets/images/l1.jpg',
+          'assets/images/l2.jpg',
+          'assets/images/l3.jpg',
+          'assets/images/l4.jpg',
+        ],
+      },
+      {
         'image': 'assets/images/soon.jpg',
         'title': 'Coming Soon',
+        'subtitle': "",
         'description': '',
         'date': '',
         'shadowColor': Colors.grey,
@@ -299,8 +327,16 @@ class _ProjectsPageState extends State<ProjectsPage> {
             final bool isHovered = hoveringIndex == index;
 
             return MouseRegion(
-              onEnter: (_) => _hoveringProjectIndex.value = index,
-              onExit: (_) => _hoveringProjectIndex.value = -1,
+              onEnter: (_) {
+                if (_hoveringProjectIndex.value != index) {
+                  _hoveringProjectIndex.value = index;
+                }
+              },
+              onExit: (_) {
+                if (_hoveringProjectIndex.value == index) {
+                  _hoveringProjectIndex.value = -1;
+                }
+              },
               child: GestureDetector(
                 onTap: () {
                   showProjectDetails(
@@ -317,27 +353,17 @@ class _ProjectsPageState extends State<ProjectsPage> {
                 },
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 300),
-                  margin: EdgeInsets.symmetric(vertical: screenWidth * 0.015),
+                  margin: EdgeInsets.symmetric(vertical: screenWidth * 0.005),
                   padding: EdgeInsets.all(
-                      screenWidth * 0.025), // Reducir el ancho de cada slide
+                      screenWidth * 0.004), // Reducir el ancho de cada slide
                   height: screenWidth * 0.28, // Reducir la altura de cada slide
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
-                    image: DecorationImage(
-                      image: AssetImage(project['image'].toString()),
-                      fit: BoxFit.cover,
-                      colorFilter: isHovered
-                          ? null
-                          : ColorFilter.mode(
-                              Colors.black.withOpacity(0.6),
-                              BlendMode.darken,
-                            ),
-                    ),
                     boxShadow: isHovered
                         ? [
                             BoxShadow(
                               color: (project['shadowColor'] as Color)
-                                      .withOpacity(0.3) ??
+                                      .withOpacity(0.2) ??
                                   Colors.transparent,
                               blurRadius: 10,
                               offset: const Offset(0, 4),
@@ -347,63 +373,76 @@ class _ProjectsPageState extends State<ProjectsPage> {
                   ),
                   child: Stack(
                     children: [
-                      AnimatedOpacity(
-                        duration: const Duration(milliseconds: 300),
-                        opacity: isHovered ? 1.0 : 0.7,
-                        child: Container(
-                          alignment: project['title'] == 'Coming Soon'
-                              ? Alignment.center
-                              : Alignment.centerLeft,
-                          padding: EdgeInsets.symmetric(
-                              horizontal: screenWidth * 0.02),
-                          child: Column(
-                            crossAxisAlignment:
-                                project['title'] == 'Coming Soon'
-                                    ? CrossAxisAlignment.center
-                                    : CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                project['title'].toString(),
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: screenWidth *
-                                      0.03, // Reducir el tamaño del texto
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                textAlign: project['title'] == 'Coming Soon'
-                                    ? TextAlign.center
-                                    : TextAlign.left,
-                              ),
-                              if (project['description'].toString().isNotEmpty)
-                                const SizedBox(height: 10),
-                              if (project['description'].toString().isNotEmpty)
-                                Text(
-                                  project['description'].toString(),
-                                  style: TextStyle(
-                                    color: Colors.white70,
-                                    fontSize: screenWidth *
-                                        0.025, // Reducir el tamaño del texto
-                                  ),
-                                ),
-                              if (project['date'].toString().isNotEmpty)
-                                const SizedBox(height: 10),
-                              if (project['date'].toString().isNotEmpty)
-                                Text(
-                                  project['date'].toString(),
-                                  style: TextStyle(
-                                    color: Colors.white54,
-                                    fontSize: screenWidth *
-                                        0.02, // Reducir el tamaño del texto
-                                  ),
-                                ),
-                            ],
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: AnimatedOpacity(
+                          duration: const Duration(milliseconds: 300),
+                          opacity: isHovered ? 1.0 : 0.4,
+                          child: Image.asset(
+                            project['image'].toString(),
+                            fit: BoxFit.cover,
+                            width: double.infinity,
+                            height: double.infinity,
                           ),
+                        ),
+                      ),
+                      Container(
+                        alignment: project['title'] == 'Coming Soon'
+                            ? Alignment.center
+                            : Alignment.centerLeft,
+                        padding: EdgeInsets.symmetric(
+                            horizontal: screenWidth * 0.02),
+                        child: Column(
+                          crossAxisAlignment: project['title'] == 'Coming Soon'
+                              ? CrossAxisAlignment.center
+                              : CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              project['title'].toString(),
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: screenWidth *
+                                    0.03, // Reducir el tamaño del texto
+                                fontWeight: FontWeight.bold,
+                              ),
+                              textAlign: project['title'] == 'Coming Soon'
+                                  ? TextAlign.center
+                                  : TextAlign.left,
+                            ),
+                            if (project['subtitle'].toString().isNotEmpty)
+                              const SizedBox(height: 10),
+                            if (project['subtitle'].toString().isNotEmpty)
+                              Text(
+                                project['subtitle'].toString(),
+                                style: TextStyle(
+                                  color: Colors.white70,
+                                  fontSize: screenWidth *
+                                      0.025, // Reducir el tamaño del texto
+                                ),
+                              ),
+                            if (project['date'].toString().isNotEmpty)
+                              const SizedBox(height: 10),
+                            if (project['date'].toString().isNotEmpty)
+                              Text(
+                                project['date'].toString(),
+                                style: TextStyle(
+                                  color: Colors.white54,
+                                  fontSize: screenWidth *
+                                      0.02, // Reducir el tamaño del texto
+                                ),
+                                textAlign: TextAlign.center, // Centrar la fecha
+                              ),
+                          ],
                         ),
                       ),
                       AnimatedPositioned(
                         duration: const Duration(milliseconds: 300),
-                        right: isHovered ? 10 : -50,
+                        right: isHovered
+                            ? screenWidth * 0.02
+                            : -50, // Se mueve desde la derecha
+
+                        top: screenWidth * 0.11,
                         child: AnimatedOpacity(
                           duration: const Duration(milliseconds: 300),
                           opacity: isHovered ? 1.0 : 0.0,

@@ -1,4 +1,5 @@
 import 'package:dark_matter_page/home/componet/hero_content.dart';
+import 'package:dark_matter_page/lenguaje/localization.dart';
 import 'package:dark_matter_page/widgets/project_slide.dart';
 import 'package:dark_matter_page/widgets/slider_section.dart';
 import 'package:flutter/material.dart';
@@ -91,6 +92,7 @@ class _HomePageState extends State<HomePage> {
 */
   @override
   Widget build(BuildContext context) {
+    final localizedStrings = AppLocalizations.of(context);
     bool isVertical =
         MediaQuery.of(context).size.height > MediaQuery.of(context).size.width;
 
@@ -127,7 +129,8 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               SizedBox(
-                  key: servicesKey, child: _buildFutureSection(isVertical)),
+                  key: servicesKey,
+                  child: _buildFutureSection(isVertical, localizedStrings)),
 
               SizedBox(key: projectsKey, child: ProjectsSection()),
 
@@ -147,7 +150,8 @@ class _HomePageState extends State<HomePage> {
   // ============================
   //   SECCIÓN “Construye para el futuro”
   // ============================
-  Widget _buildFutureSection(bool isVertical) {
+  Widget _buildFutureSection(
+      bool isVertical, AppLocalizations localizedStrings) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
       color: Colors.black,
@@ -159,7 +163,7 @@ class _HomePageState extends State<HomePage> {
                 SizedBox(child: imagefuture()),
                 const SizedBox(height: 20),
                 // Texto abajo sin Expanded
-                SizedBox(child: textfuture(isVertical)),
+                SizedBox(child: textfuture(isVertical, localizedStrings)),
               ],
             )
           : Row(
@@ -169,13 +173,14 @@ class _HomePageState extends State<HomePage> {
                 Expanded(flex: 1, child: imagefuture()),
                 const SizedBox(width: 20),
                 // Texto a la derecha con Expanded
-                Expanded(flex: 2, child: textfuture(isVertical)),
+                Expanded(
+                    flex: 2, child: textfuture(isVertical, localizedStrings)),
               ],
             ),
     );
   }
 
-  Widget textfuture(bool isVertical) {
+  Widget textfuture(bool isVertical, AppLocalizations localizedStrings) {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -189,7 +194,7 @@ class _HomePageState extends State<HomePage> {
             isVertical ? CrossAxisAlignment.center : CrossAxisAlignment.start,
         children: [
           Text(
-            'Construye para el futuro',
+            localizedStrings.translate('build_for_future'),
             textAlign: isVertical ? TextAlign.center : TextAlign.justify,
             style: TextStyle(
               color: Colors.white,
@@ -199,10 +204,11 @@ class _HomePageState extends State<HomePage> {
           ),
           const SizedBox(height: 10),
           Text(
-            'Es hora de llevar tu negocio al siguiente nivel. '
+            localizedStrings.translate('take_business_next_level'),
+            /*  'Es hora de llevar tu negocio al siguiente nivel. '
             'Dark Matter ayuda a empresas de todos los tamaños a transformar '
             'sus operaciones y conectar el mundo digital con el físico a través '
-            'de tecnología avanzada.',
+            'de tecnología avanzada.'*/
             textAlign: isVertical ? TextAlign.center : TextAlign.justify,
             style: TextStyle(
               color: Colors.white70,
@@ -215,8 +221,8 @@ class _HomePageState extends State<HomePage> {
             onPressed: () {
               // Acción al hacer clic
             },
-            child: const Text(
-              'Aprende más sobre nosotros',
+            child: Text(
+              localizedStrings.translate('learn_more_about_us'),
               style: TextStyle(
                 color: Colors.purpleAccent,
                 fontSize: 16,
@@ -233,12 +239,13 @@ class _HomePageState extends State<HomePage> {
               _SocialIcon(
                   asset: 'assets/images/linkedin.png',
                   size: 50,
-                  url: 'https://www.linkedin.com/company/darkmattercode'),
+                  url:
+                      'https://www.linkedin.com/in/dark-matter-code-s-r-l-88a46a322'),
               const SizedBox(width: 10),
               _SocialIcon(
                   asset: 'assets/images/instagram.png',
                   size: 44,
-                  url: 'https://www.instagram.com/darkmattercode'),
+                  url: 'https://www.instagram.com/darkmattercodes'),
               const SizedBox(width: 10),
               _SocialIcon(
                   asset: 'assets/images/tiktok.png',
@@ -255,7 +262,7 @@ class _HomePageState extends State<HomePage> {
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
       child: Image.asset(
-        'assets/images/future_image.png',
+        'assets/images/future.png',
         fit: BoxFit.cover,
       ),
     );

@@ -1,4 +1,5 @@
 import 'package:animations/animations.dart';
+import 'package:dark_matter_page/lenguaje/localization.dart';
 import 'package:dark_matter_page/widgets/project_slide.dart';
 import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
@@ -6,11 +7,10 @@ import 'package:photo_view/photo_view_gallery.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:three_dart/three3d/math/math.dart';
 
 void showProjectDetails(SlideData slide, BuildContext context) {
-  if (slide.relatedImages.isEmpty) {
-    return; // No abrir el diálogo si no hay imágenes relacionadas
-  }
+  if (slide.relatedImages.isEmpty) return;
 
   showModal(
     context: context,
@@ -19,35 +19,50 @@ void showProjectDetails(SlideData slide, BuildContext context) {
       final double screenHeight = MediaQuery.of(context).size.height;
       final double screenWidth = MediaQuery.of(context).size.width;
       final bool isLandscape = screenWidth > screenHeight;
+      final localizedStrings = AppLocalizations.of(context);
 
       double maxHeight = isLandscape ? screenHeight * 0.85 : screenHeight * 0.7;
       double maxWidth = isLandscape ? screenWidth * 0.85 : screenWidth * 0.7;
 
+      // 1. Primero crear la lista de imágenes y calcular las alturas iniciales
       List<String> imageList = List.from(slide.relatedImages);
       List<double> aspectRatios = [];
-
       double totalHeightLeft = 0;
       double totalHeightRight = 0;
 
+      // 2. Calcular los aspect ratios iniciales y las alturas
       for (int i = 0; i < imageList.length; i++) {
         double aspectRatio =
             isLandscape ? (i % 2 == 0 ? 1.2 : 0.8) : (i % 3 == 0 ? 1.3 : 0.9);
         aspectRatios.add(aspectRatio);
 
-        if (totalHeightLeft <= totalHeightRight) {
+        // Calcular en qué columna irá cada imagen
+        if (i % 2 == 0) {
           totalHeightLeft += 1 / aspectRatio;
         } else {
           totalHeightRight += 1 / aspectRatio;
         }
       }
 
-      if ((imageList.length % 2) != 0) {
-        double adjustment = (totalHeightLeft > totalHeightRight)
-            ? totalHeightLeft - totalHeightRight
-            : totalHeightRight - totalHeightLeft;
-
+      // 3. Si es impar, agregar la primera imagen y calcular su aspect ratio para balancear
+      if (imageList.length % 2 != 0) {
         imageList.add(imageList.first);
-        aspectRatios.add(1 / adjustment);
+
+        // Calcular el aspect ratio necesario para balancear las columnas
+        double heightDifference = totalHeightLeft - totalHeightRight;
+        double newAspectRatio;
+
+        if (heightDifference > 0) {
+          // La columna izquierda es más alta
+          newAspectRatio = 1 / heightDifference;
+        } else {
+          // La columna derecha es más alta o son iguales
+          newAspectRatio = 1 / Math.abs(heightDifference);
+        }
+
+        // Asegurarse de que el aspect ratio esté dentro de límites razonables
+        newAspectRatio = newAspectRatio.clamp(0.5, 2.0);
+        aspectRatios.add(newAspectRatio);
       }
 
       return Dialog(
@@ -166,7 +181,8 @@ void showProjectDetails(SlideData slide, BuildContext context) {
                         vertical: 12,
                       ),
                     ),
-                    child: const Text('Cerrar', style: TextStyle(fontSize: 18)),
+                    child: Text(localizedStrings.translate('close'),
+                        style: TextStyle(fontSize: 18)),
                   ),
                 ),
               ],
