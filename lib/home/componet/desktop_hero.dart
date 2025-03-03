@@ -107,7 +107,8 @@ class _DesktopHeroState extends State<DesktopHero> with WidgetsBindingObserver {
                 ),
                 // Sección "tecno()" bien posicionada
                 Padding(
-                  padding: const EdgeInsets.only(top: 40),
+                  padding:
+                      EdgeInsets.only(top: mediaQuery.width < 600 ? 20 : 40),
                   child: tecno(localizedStrings),
                 ),
               ],
@@ -177,15 +178,15 @@ Widget tecno(AppLocalizations localizedStrings) {
               runSpacing: 20,
               alignment: WrapAlignment.center,
               children: [
-                Image.asset('assets/images/flutter.png',
+                Image.asset('assets/images/flutter.webp',
                     width: imageSize, height: imageSize),
-                Image.asset('assets/images/dart.png',
+                Image.asset('assets/images/dart.webp',
                     width: imageSize, height: imageSize),
-                Image.asset('assets/images/nodejs.png',
+                Image.asset('assets/images/nodejs.webp',
                     width: imageSize, height: imageSize),
-                Image.asset('assets/images/python.png',
+                Image.asset('assets/images/python.webp',
                     width: imageSize, height: imageSize),
-                Image.asset('assets/images/github.png',
+                Image.asset('assets/images/github.webp',
                     width: imageSize, height: imageSize),
               ],
             ),

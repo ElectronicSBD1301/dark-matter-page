@@ -66,7 +66,7 @@ class CustomFooter extends StatelessWidget {
           mainAxisAlignment:
               isMobile ? MainAxisAlignment.center : MainAxisAlignment.start,
           children: [
-            Image.asset('assets/images/logo.png', width: 40, height: 40),
+            Image.asset('assets/images/logo.webp', width: 40, height: 40),
             const SizedBox(width: 8),
             Text(
               localizedStrings.translate("gestion"),
@@ -129,17 +129,17 @@ class CustomFooter extends StatelessWidget {
             IconButton(
               onPressed: () => _launchURL(
                   'https://www.linkedin.com/in/dark-matter-code-s-r-l-88a46a322'),
-              icon: Image.asset('assets/images/linkedin.png', width: 30),
+              icon: Image.asset('assets/images/linkedin.webp', width: 30),
             ),
             IconButton(
               onPressed: () =>
                   _launchURL('https://www.instagram.com/darkmattercodes'),
-              icon: Image.asset('assets/images/instagram.png', width: 30),
+              icon: Image.asset('assets/images/instagram.webp', width: 30),
             ),
             IconButton(
               onPressed: () =>
                   _launchURL('https://www.tiktok.com/@darkmattercode'),
-              icon: Image.asset('assets/images/tiktok.png', width: 30),
+              icon: Image.asset('assets/images/tiktok.webp', width: 30),
             ),
           ],
         ),

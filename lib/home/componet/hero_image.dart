@@ -24,7 +24,7 @@ class _HeroImageState extends State<HeroImage> {
   @override
   void initState() {
     super.initState();
-    _controller = VideoPlayerController.asset('assets/animate/logo.mp4')
+    _controller = VideoPlayerController.asset('assets/animate/logo.webm')
       ..initialize().then((_) {
         setState(() {
           _isInitialized = true;
@@ -75,7 +75,7 @@ class _HeroImageState extends State<HeroImage> {
               decoration: BoxDecoration(
                 color: Colors.purple.shade900,
                 image: const DecorationImage(
-                  image: AssetImage('assets/images/flutter.png'),
+                  image: AssetImage('assets/images/flutter.webp'),
                   fit: BoxFit.cover,
                   opacity: 0.5,
                 ),

@@ -42,7 +42,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
       title: Row(
         children: [
           Image.asset(
-            'assets/images/logo.png',
+            'assets/images/logo.webp',
             width: 40,
             height: 40,
             fit: BoxFit.contain,

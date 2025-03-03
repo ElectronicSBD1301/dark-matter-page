@@ -237,18 +237,18 @@ class _HomePageState extends State<HomePage> {
             // Centra los iconos siempre
             children: [
               _SocialIcon(
-                  asset: 'assets/images/linkedin.png',
+                  asset: 'assets/images/linkedin.webp',
                   size: 50,
                   url:
                       'https://www.linkedin.com/in/dark-matter-code-s-r-l-88a46a322'),
               const SizedBox(width: 10),
               _SocialIcon(
-                  asset: 'assets/images/instagram.png',
+                  asset: 'assets/images/instagram.webp',
                   size: 44,
                   url: 'https://www.instagram.com/darkmattercodes'),
               const SizedBox(width: 10),
               _SocialIcon(
-                  asset: 'assets/images/tiktok.png',
+                  asset: 'assets/images/tiktok.webp',
                   size: 44,
                   url: 'https://www.tiktok.com/@darkmattercode'),
             ],
@@ -262,7 +262,7 @@ class _HomePageState extends State<HomePage> {
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
       child: Image.asset(
-        'assets/images/future.png',
+        'assets/images/future.webp',
         fit: BoxFit.cover,
       ),
     );

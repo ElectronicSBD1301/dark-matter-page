@@ -73,48 +73,48 @@ class _SliderSectionState extends State<SliderSection> {
           'description':
               localizedStrings.translate("slide_innovation_description"),
           'type': 'text',
-          'image': 'assets/images/innovation.jpg',
+          'image': 'assets/images/innovation.webp',
         },
         {
           'title': localizedStrings.translate("slide_software_title"),
           'description':
               localizedStrings.translate("slide_software_description"),
           'type': 'video',
-          'videoAsset': 'assets/images/software_development.mp4',
+          'videoAsset': 'assets/images/software_development.webm',
         },
         {
           'title': localizedStrings.translate("slide_consulting_title"),
           'description':
               localizedStrings.translate("slide_consulting_description"),
           'type': 'text',
-          'image': 'assets/images/it_consulting.jpg',
+          'image': 'assets/images/it_consulting.webp',
         },
         {
           'title': localizedStrings.translate("slide_integration_title"),
           'description':
               localizedStrings.translate("slide_integration_description"),
           'type': 'text',
-          'image': 'assets/images/hardware_software.jpg',
+          'image': 'assets/images/hardware_software.webp',
         },
         {
           'title': localizedStrings.translate("slide_cybersecurity_title"),
           'description':
               localizedStrings.translate("slide_cybersecurity_description"),
           'type': 'video',
-          'videoAsset': 'assets/images/cybersecurity.mp4',
+          'videoAsset': 'assets/images/cybersecurity.webm',
         },
         {
           'title': localizedStrings.translate("slide_ai_title"),
           'description': localizedStrings.translate("slide_ai_description"),
           'type': 'video',
-          'videoAsset': 'assets/images/ai_automation.mp4',
+          'videoAsset': 'assets/images/ai_automation.webm',
         },
         {
           'title': localizedStrings.translate("slide_experience_title"),
           'description':
               localizedStrings.translate("slide_experience_description"),
           'type': 'text',
-          'image': 'assets/images/experience.jpg',
+          'image': 'assets/images/experience.webp',
         },
       ];
       _isSlidesInitialized = true;
@@ -137,48 +137,48 @@ class _SliderSectionState extends State<SliderSection> {
             'description':
                 localizedStrings.translate("slide_innovation_description"),
             'type': 'text',
-            'image': 'assets/images/innovation.jpg',
+            'image': 'assets/images/innovation.webp',
           },
           {
             'title': localizedStrings.translate("slide_software_title"),
             'description':
                 localizedStrings.translate("slide_software_description"),
             'type': 'video',
-            'videoAsset': 'assets/images/software_development.mp4',
+            'videoAsset': 'assets/images/software_development.webm',
           },
           {
             'title': localizedStrings.translate("slide_consulting_title"),
             'description':
                 localizedStrings.translate("slide_consulting_description"),
             'type': 'text',
-            'image': 'assets/images/it_consulting.jpg',
+            'image': 'assets/images/it_consulting.webp',
           },
           {
             'title': localizedStrings.translate("slide_integration_title"),
             'description':
                 localizedStrings.translate("slide_integration_description"),
             'type': 'text',
-            'image': 'assets/images/hardware_software.jpg',
+            'image': 'assets/images/hardware_software.webp',
           },
           {
             'title': localizedStrings.translate("slide_cybersecurity_title"),
             'description':
                 localizedStrings.translate("slide_cybersecurity_description"),
             'type': 'video',
-            'videoAsset': 'assets/images/cybersecurity.mp4',
+            'videoAsset': 'assets/images/cybersecurity.webm',
           },
           {
             'title': localizedStrings.translate("slide_ai_title"),
             'description': localizedStrings.translate("slide_ai_description"),
             'type': 'video',
-            'videoAsset': 'assets/images/ai_automation.mp4',
+            'videoAsset': 'assets/images/ai_automation.webm',
           },
           {
             'title': localizedStrings.translate("slide_experience_title"),
             'description':
                 localizedStrings.translate("slide_experience_description"),
             'type': 'text',
-            'image': 'assets/images/experience.jpg',
+            'image': 'assets/images/experience.webp',
           },
         ];
 
@@ -308,7 +308,7 @@ class _SliderSectionState extends State<SliderSection> {
 
     // 2) Si el nuevo slide es "video", creamos un nuevo VideoPlayerController
     if (slide['type'] == 'video') {
-      final videoAsset = slide['videoAsset'] ?? 'assets/images/slide.mp4';
+      final videoAsset = slide['videoAsset'] ?? 'assets/images/slide.webm';
       _initVideoController(videoAsset);
     }
     // Si es 'text', no creamos nada.

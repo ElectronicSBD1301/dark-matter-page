@@ -17,7 +17,7 @@ class _VideoSectionState extends State<VideoSection> {
     super.initState();
 
     // Ejemplo: si detectas web, quizás usar network, si no, asset
-    _videoController = VideoPlayerController.asset('assets/videos/slide.mp4')
+    _videoController = VideoPlayerController.asset('assets/videos/slide.webm')
       ..initialize().then((_) {
         setState(() => _isInitialized = true);
         _videoController.setLooping(true);

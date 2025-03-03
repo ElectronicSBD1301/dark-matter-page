@@ -51,75 +51,67 @@ flutter_icons:
   macos:
     generate: false
   
-  image_path: "assets/images/logob.png"  # Ruta de la imagen del nuevo ícono
+  image_path: "assets/images/logob.webp"  # Ruta de la imagen del nuevo ícono
 
 flutter:
   uses-material-design: true
 
   assets:
-    - assets/images/background1.png
-    - assets/images/background2.png
-    - assets/images/github.png
-    - assets/images/nodejs.png
-    - assets/images/python.png
-    - assets/images/dart.png
-    - assets/images/flutter.png
-    - assets/images/logo.png
-    - assets/images/slide.mp4
-    - assets/images/linkedin.png
-    - assets/images/instagram.png
-    - assets/images/tiktok.png
-    - assets/images/future_image.png
-    - assets/images/future.png
-    - assets/images/project1.png
-    - assets/images/project2.png
-    - assets/images/project3.png
-    - assets/images/project4.png
-    - assets/images/project5.png
-    - assets/images/project6.png
-    - assets/animate/logo.mp4
-    - assets/images/innovation.jpg
-    - assets/images/software_development.mp4
-    - assets/images/it_consulting.jpg
-    - assets/images/hardware_software.jpg
-    - assets/images/cybersecurity.mp4
-    - assets/images/ai_automation.mp4
-    - assets/images/experience.jpg
-    - assets/images/logob.png
-    - assets/images/soon.jpg
-    - assets/images/prueba.jpeg
-    - assets/images/jade0.jpg
-    - assets/images/jade00.jpg
-    - assets/images/jade1.jpg
-    - assets/images/jade2.jpg
-    - assets/images/jade3.jpg
-    - assets/images/jade4.jpg
-    - assets/images/jade5.jpg
-    - assets/images/jade6.jpg
-    - assets/images/jade7.jpg
-    - assets/images/jade8.jpg
-    - assets/images/jade9.jpg
-    - assets/images/jade10.jpg
-    - assets/images/jade000.png
-    - assets/images/jadep.png
-    - assets/images/p00.png
-    - assets/images/pp0.png
-    - assets/images/p0.png
-    - assets/images/p1.jpg
-    - assets/images/p2.jpg
-    - assets/images/p3.jpg
-    - assets/images/p4.jpg
-    - assets/images/p5.jpg
-    - assets/images/p6.jpg
-    - assets/images/pp0.jpg
-    - assets/images/matter.png
-    - assets/images/dark.png
-    - assets/images/code.jpg
-    - assets/images/luna.png
-    - assets/images/l0.jpg
-    - assets/images/l1.jpg
-    - assets/images/l2.jpg
-    - assets/images/l3.jpg
-    - assets/images/l4.jpg
+    - assets/images/github.webp
+    - assets/images/nodejs.webp
+    - assets/images/python.webp
+    - assets/images/dart.webp
+    - assets/images/flutter.webp
+    - assets/images/logo.webp
+    - assets/images/slide.webm
+    - assets/images/linkedin.webp
+    - assets/images/instagram.webp
+    - assets/images/tiktok.webp
+    - assets/images/future.webp
+    - assets/images/project5.webp
+    - assets/animate/logo.webm
+    - assets/images/innovation.webp
+    - assets/images/software_development.webm
+    - assets/images/it_consulting.webp
+    - assets/images/hardware_software.webp
+    - assets/images/cybersecurity.webm
+    - assets/images/ai_automation.webm
+    - assets/images/experience.webp
+    - assets/images/logob.webp
+    - assets/images/soon.webp
+    - assets/images/prueba.webp
+    - assets/images/jade0.webp
+    - assets/images/jade00.webp
+    - assets/images/jade1.webp
+    - assets/images/jade2.webp
+    - assets/images/jade3.webp
+    - assets/images/jade4.webp
+    - assets/images/jade5.webp
+    - assets/images/jade6.webp
+    - assets/images/jade7.webp
+    - assets/images/jade8.webp
+    - assets/images/jade9.webp
+    - assets/images/jade10.webp
+    - assets/images/jade000.webp
+    - assets/images/jadep.webp
+    - assets/images/p00.webp
+    - assets/images/pp0.webp
+    - assets/images/p0.webp
+    - assets/images/p1.webp
+    - assets/images/p2.webp
+    - assets/images/p3.webp
+    - assets/images/p4.webp
+    - assets/images/p5.webp
+    - assets/images/p6.webp
+    - assets/images/pp0.webp
+    - assets/images/matter.webp
+    - assets/images/dark.webp
+    - assets/images/code.webp
+    - assets/images/luna.webp
+    - assets/images/l0.webp
+    - assets/images/l1.webp
+    - assets/images/l2.webp
+    - assets/images/l3.webp
+    - assets/images/l4.webp
     - lib/l10n/intl_en.json
     - lib/l10n/intl_es.json
