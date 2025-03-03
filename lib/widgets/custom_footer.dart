@@ -84,6 +84,15 @@ class CustomFooter extends StatelessWidget {
             Text('+1 829-362-4805', style: TextStyle(color: Colors.white)),
           ],
         ),
+        Row(
+          mainAxisAlignment:
+              isMobile ? MainAxisAlignment.center : MainAxisAlignment.start,
+          children: const [
+            Icon(Icons.phone, color: Colors.white),
+            SizedBox(width: 8),
+            Text('+1 849-941-2232', style: TextStyle(color: Colors.white)),
+          ],
+        ),
         const SizedBox(height: 6),
         Row(
           mainAxisAlignment:
@@ -91,7 +100,7 @@ class CustomFooter extends StatelessWidget {
           children: const [
             Icon(Icons.email, color: Colors.white),
             SizedBox(width: 8),
-            Text('Articmattercode@gmail.com',
+            Text('tech@darkmattercode.com',
                 style: TextStyle(color: Colors.white)),
           ],
         ),

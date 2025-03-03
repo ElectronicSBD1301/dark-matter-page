@@ -28,7 +28,8 @@ class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
 }
 
 class _CustomAppBarState extends State<CustomAppBar> {
-  String? _hoveredButton; // Almacena el botón que tiene el mouse encima
+  String? _hoveredButton;
+  bool _isHoveringAppBar = false;
 
   @override
   Widget build(BuildContext context) {
@@ -36,34 +37,39 @@ class _CustomAppBarState extends State<CustomAppBar> {
     final languageProvider = Provider.of<LanguageProvider>(context);
     final localizedStrings = AppLocalizations.of(context);
 
-    return AppBar(
-      backgroundColor: Colors.transparent,
-      elevation: 0,
-      title: Row(
-        children: [
-          Image.asset(
-            'assets/images/logo.webp',
-            width: 40,
-            height: 40,
-            fit: BoxFit.contain,
-          ),
-          const SizedBox(width: 8),
-          const Text(
-            'Dark Matter',
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHoveringAppBar = true),
+      onExit: (_) => setState(() => _isHoveringAppBar = false),
+      child: AppBar(
+        backgroundColor: _isHoveringAppBar
+            ? Colors.black.withOpacity(0.9)
+            : Colors.transparent,
+        elevation: 0,
+        title: Row(
+          children: [
+            Image.asset(
+              'assets/images/logo.webp',
+              width: 40,
+              height: 40,
+              fit: BoxFit.contain,
             ),
-          ),
-        ],
+            const SizedBox(width: 8),
+            const Text(
+              'Dark Matter',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+        actions: screenWidth < 1200
+            ? _buildPopupMenu(localizedStrings)
+            : _buildDesktopMenu(localizedStrings),
       ),
-      actions: screenWidth < 1200
-          ? _buildPopupMenu(localizedStrings)
-          : _buildDesktopMenu(localizedStrings),
     );
   }
 
-  /// Menú en modo **Popup** para dispositivos con `width < 1200px`
   List<Widget> _buildPopupMenu(AppLocalizations localizedStrings) {
     return [
       PopupMenuButton<String>(
@@ -102,19 +108,14 @@ class _CustomAppBarState extends State<CustomAppBar> {
                 localizedStrings.translate('projects'), widget.onTapProjects),
             _buildPopupMenuItem(
                 localizedStrings.translate('contact'), widget.onTapContact),
-            _buildPopupMenuItem(
-              localizedStrings.translate('language'),
-              () {
-                _showLanguageDialog();
-              },
-            ),
+            _buildPopupMenuItem(localizedStrings.translate('language'),
+                () => _showLanguageDialog()),
           ];
         },
       ),
     ];
   }
 
-  /// Menú en **modo Desktop** para dispositivos con `width >= 1200px`
   List<Widget> _buildDesktopMenu(AppLocalizations localizedStrings) {
     return [
       _buildAnimatedButton(
@@ -129,9 +130,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
           localizedStrings.translate('contact'), widget.onTapContact),
       IconButton(
         icon: const Icon(Icons.language, color: Colors.white),
-        onPressed: () {
-          _showLanguageDialog();
-        },
+        onPressed: _showLanguageDialog,
       ),
     ];
   }
@@ -197,40 +196,8 @@ class _CustomAppBarState extends State<CustomAppBar> {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              ListTile(
-                title: const Text(
-                  'English',
-                  style: TextStyle(color: Colors.white),
-                ),
-                onTap: () {
-                  Provider.of<LanguageProvider>(context, listen: false)
-                      .changeLanguage('en');
-                  Navigator.of(context).pop();
-                },
-                tileColor: Provider.of<LanguageProvider>(context)
-                            .currentLocale
-                            .languageCode ==
-                        'en'
-                    ? Colors.purpleAccent.withOpacity(0.2)
-                    : null,
-              ),
-              ListTile(
-                title: const Text(
-                  'Español',
-                  style: TextStyle(color: Colors.white),
-                ),
-                onTap: () {
-                  Provider.of<LanguageProvider>(context, listen: false)
-                      .changeLanguage('es');
-                  Navigator.of(context).pop();
-                },
-                tileColor: Provider.of<LanguageProvider>(context)
-                            .currentLocale
-                            .languageCode ==
-                        'es'
-                    ? Colors.purpleAccent.withOpacity(0.2)
-                    : null,
-              ),
+              _buildLanguageOption('English', 'en'),
+              _buildLanguageOption('Español', 'es'),
             ],
           ),
           shape: RoundedRectangleBorder(
@@ -238,6 +205,22 @@ class _CustomAppBarState extends State<CustomAppBar> {
           ),
         );
       },
+    );
+  }
+
+  Widget _buildLanguageOption(String language, String code) {
+    return ListTile(
+      title: Text(language, style: const TextStyle(color: Colors.white)),
+      onTap: () {
+        Provider.of<LanguageProvider>(context, listen: false)
+            .changeLanguage(code);
+        Navigator.of(context).pop();
+      },
+      tileColor:
+          Provider.of<LanguageProvider>(context).currentLocale.languageCode ==
+                  code
+              ? Colors.purpleAccent.withOpacity(0.2)
+              : null,
     );
   }
 }
