@@ -63,12 +63,11 @@ flutter:
     - assets/images/dart.webp
     - assets/images/flutter.webp
     - assets/images/logo.webp
-    - assets/images/slide.webm
+    - assets/images/fondo.webm
     - assets/images/linkedin.webp
     - assets/images/instagram.webp
     - assets/images/tiktok.webp
     - assets/images/future.webp
-    - assets/images/project5.webp
     - assets/animate/logo.webm
     - assets/images/innovation.webp
     - assets/images/software_development.webm
@@ -79,7 +78,6 @@ flutter:
     - assets/images/experience.webp
     - assets/images/logob.webp
     - assets/images/soon.webp
-    - assets/images/prueba.webp
     - assets/images/jade0.webp
     - assets/images/jade00.webp
     - assets/images/jade1.webp
@@ -103,7 +101,6 @@ flutter:
     - assets/images/p4.webp
     - assets/images/p5.webp
     - assets/images/p6.webp
-    - assets/images/pp0.webp
     - assets/images/matter.webp
     - assets/images/dark.webp
     - assets/images/code.webp

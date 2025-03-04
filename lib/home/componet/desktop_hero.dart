@@ -28,19 +28,25 @@ class _DesktopHeroState extends State<DesktopHero> with WidgetsBindingObserver {
 
   Future<void> _initializeVideo() async {
     try {
-      // URL directa del video en Firebase Storage
+      /*
+       // URL directa del video en Firebase Storage
       final videoUrl =
-          'https://firebasestorage.googleapis.com/v0/b/dark-60a60.firebasestorage.app/o/fondo.mp4?alt=media&token=23f802af-0059-4668-aa9e-8169a511da50';
-
+         // mp4'https://firebasestorage.googleapis.com/v0/b/dark-60a60.firebasestorage.app/o/fondo.mp4?alt=media&token=23f802af-0059-4668-aa9e-8169a511da50';
+//webm
+"https://firebasestorage.googleapis.com/v0/b/dark-60a60.firebasestorage.app/o/fondo.webm?alt=media&token=5a705a00-8af3-4516-8215-0f010376448e";
       _backgroundController = VideoPlayerController.network(videoUrl)
-        ..initialize().then((_) {
-          setState(() {
-            _isBackgroundInitialized = true;
-          });
-          _backgroundController.setLooping(true);
-          _backgroundController.setVolume(0);
-          _backgroundController.play();
-        });
+      */
+      // URL del video en assets
+      _backgroundController =
+          VideoPlayerController.asset('assets/images/fondo.webm')
+            ..initialize().then((_) {
+              setState(() {
+                _isBackgroundInitialized = true;
+              });
+              _backgroundController.setLooping(true);
+              _backgroundController.setVolume(0);
+              _backgroundController.play();
+            });
     } catch (e) {
       print('Error al cargar el video: $e');
     }

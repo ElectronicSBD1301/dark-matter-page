@@ -308,7 +308,7 @@ class _SliderSectionState extends State<SliderSection> {
 
     // 2) Si el nuevo slide es "video", creamos un nuevo VideoPlayerController
     if (slide['type'] == 'video') {
-      final videoAsset = slide['videoAsset'] ?? 'assets/images/slide.webm';
+      final videoAsset = slide['videoAsset'] ?? 'assets/images/fondo.webm';
       _initVideoController(videoAsset);
     }
     // Si es 'text', no creamos nada.
